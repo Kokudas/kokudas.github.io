@@ -30,6 +30,10 @@
     --ok:#35c759; --warn:#ffb300; --bad:#ff5171; --chip:#232a36;
     --ring:#1f2530; --text:#e8ecf3; --highlight:#fff;  --ring-size: 60px;
   --ring-thickness: 6px;
+    /* 효과 강도 튜닝용 */
+  --sweep-opacity: .65;    /* 빛 웨지 투명도 */
+  --sweep-blur: 2px;       /* 빛 번짐 정도 */
+  --sweep-speed: 2.8s;     /* 한 바퀴 도는 시간 */
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -81,20 +85,65 @@
   .kpis{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px}
   @media (max-width: 720px){ .kpis{grid-template-columns: 1fr} }
   .kpi{ display:flex; gap:14px; align-items:center; border:1px solid #2a3040; border-radius:14px; padding:14px; background:radial-gradient(120px 120px at 20% -10%, #11224444, transparent); }
+/* 도넛(기본 게이지) — 크기 고정 + 마스크로 속빈 원 */
 .ring{
   width: var(--ring-size);
   height: var(--ring-size);
-  flex: 0 0 var(--ring-size);   /* flex 컨테이너에서 축소/확대 방지 */
+  flex: 0 0 var(--ring-size);
   display: inline-block;
+  position: relative;
   border-radius: 50%;
-  /* 기본 각도는 0deg (JS가 --p를 덮어씀) */
-  --p: 0deg;
+  overflow: hidden;                  /* 블러가 밖으로 보이지 않게 */
+  isolation: isolate;
+  --p: 0deg;                         /* 진행각도 (JS에서 세팅) */
   background: conic-gradient(var(--accent) 0 var(--p), var(--ring) 0);
-  /* 가운데를 뚫는 마스크(도넛) */
+
+  /* 도넛 모양(속 비우기) 마스크 */
   -webkit-mask: radial-gradient(farthest-side,
-                 transparent calc(100% - var(--ring-thickness)), #000 0);
-  mask: radial-gradient(farthest-side,
-         transparent calc(100% - var(--ring-thickness)), #000 0);
+                  transparent calc(100% - var(--ring-thickness)), #000 0);
+          mask: radial-gradient(farthest-side,
+                  transparent calc(100% - var(--ring-thickness)), #000 0);
+}
+
+/* HUD 스윕 효과 — 레이아웃 영향 없음(absolute + inset:0) */
+.ring::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:50%;
+  pointer-events:none;
+  opacity: var(--sweep-opacity);
+  filter: blur(var(--sweep-blur));
+  will-change: transform;
+  animation: ring-sweep var(--sweep-speed) linear infinite;
+
+  /* 얇은 빛 웨지들이 반복되며 회전 */
+  background:
+    repeating-conic-gradient(
+      from -90deg,
+      rgba(255,255,255,0)   0deg 6deg,
+      rgba(255,255,255,.9)  6deg 7.2deg,
+      rgba(255,255,255,0)  7.2deg 14.4deg
+    );
+
+  /* (A) 도넛 모양으로 구멍 뚫기 + (B) 진행각까지만 보이도록 마스킹 */
+  -webkit-mask-image:
+    radial-gradient(farthest-side, transparent calc(100% - var(--ring-thickness)), #000 0),
+    conic-gradient(#000 0 var(--p), transparent 0);
+  -webkit-mask-composite: source-in;   /* 두 마스크 교집합 */
+          mask-image:
+    radial-gradient(farthest-side, transparent calc(100% - var(--ring-thickness)), #000 0),
+    conic-gradient(#000 0 var(--p), transparent 0);
+          mask-composite: intersect;
+}
+
+@keyframes ring-sweep{ to { transform: rotate(360deg); } }
+
+/* (선택) 숫자 폭 고정해서 레이아웃 흔들림 방지 */
+#kpiSuccess, #kpiAppear{ display:inline-block; min-width: 9ch; font-variant-numeric: tabular-nums; }
+#kpiTries{   display:inline-block; min-width: 6ch; font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce){
+  .ring::after{ animation: none; opacity: .25; }
 }
 
   .kpi strong{font-size:20px; color:var(--highlight)}
