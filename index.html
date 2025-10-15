@@ -28,12 +28,9 @@
   :root{
     --bg:#0f1115; --panel:#161a22; --muted:#8a9099; --accent:#6aa0ff;
     --ok:#35c759; --warn:#ffb300; --bad:#ff5171; --chip:#232a36;
-    --ring:#1f2530; --text:#e8ecf3; --highlight:#fff;  --ring-size: 60px;
-  --ring-thickness: 6px;
-    /* 효과 강도 튜닝용 */
-  --sweep-opacity: .65;    /* 빛 웨지 투명도 */
-  --sweep-blur: 2px;       /* 빛 번짐 정도 */
-  --sweep-speed: 2.8s;     /* 한 바퀴 도는 시간 */
+    --ring:#1f2530; --text:#e8ecf3;  --ring-size: 60px; --ring-thickness: 10px;
+    --hud-speed: 120;            /* HUD 도는 속도(px/s) */ 
+    --glow: 8px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -85,7 +82,17 @@
   .kpis{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px}
   @media (max-width: 720px){ .kpis{grid-template-columns: 1fr} }
   .kpi{ display:flex; gap:14px; align-items:center; border:1px solid #2a3040; border-radius:14px; padding:14px; background:radial-gradient(120px 120px at 20% -10%, #11224444, transparent); }
-/* 도넛(기본 게이지) — 크기 고정 + 마스크로 속빈 원 */
+.ringwrap{ position:relative; width:var(--ring-size); height:var(--ring-size); flex:0 0 var(--ring-size); }
+svg{ display:block; width:100%; height:100%; }
+.track{ stroke: var(--ring); fill:none; stroke-linecap: round; }
+.fill { stroke: var(--accent); fill:none; stroke-linecap: round; transition: stroke .25s ease, stroke-dashoffset .25s linear; }
+
+/* 성공 링 HUD */
+.hud { filter: drop-shadow(0 0 var(--glow) rgba(160,200,255,.6)); }
+.tail{ stroke: #9fc3ff; stroke-linecap: round; opacity:.7; fill:none; }
+.core{ stroke: #fff;     stroke-linecap: round; fill:none; }
+.flare{ fill: #fff; opacity:.95; }
+  /* 도넛(기본 게이지) — 크기 고정 + 마스크로 속빈 원 */
 .ring{
   width: var(--ring-size);
   height: var(--ring-size);
@@ -275,46 +282,89 @@
     </div>
   </section>
 
-  <!-- 좌하단: KPI 강조 -->
-  <section class="card" id="resultCard">
-    <h3>③ 결과</h3>
-    <div class="kpis">
-      <div class="kpi">
-        <div class="ring" id="ringSuccess" style="--p:0deg"></div>
-        <div>
-          <strong id="kpiSuccess">—%</strong>
-          <small>환각(8등급) 확률</small>
-        </div>
+<!-- 좌하단: KPI 강조 -->
+<section class="card" id="resultCard">
+  <h3>③ 결과</h3>
+  <div class="kpis">
+    <!-- 성공 확률 -->
+    <div class="kpi">
+      <div class="ringwrap">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <defs>
+            <circle id="succPath" cx="50" cy="50" r="45"/>
+            <mask id="succMask" maskUnits="userSpaceOnUse">
+              <circle id="succMaskStroke" cx="50" cy="50" r="45"
+                      fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"
+                      transform="rotate(-90 50 50)"
+                      stroke-dasharray="0 1" stroke-dashoffset="0"/>
+            </mask>
+          </defs>
+
+          <use href="#succPath" class="track" stroke-width="10" transform="rotate(-90 50 50)"/>
+          <use id="succFill" href="#succPath" class="fill" stroke-width="10"
+               transform="rotate(-90 50 50)" stroke-dasharray="0 1" stroke-dashoffset="0"/>
+
+          <!-- HUD 이펙트(성공 링에만) -->
+          <g id="succHUD" class="hud" mask="url(#succMask)">
+            <path id="succTail" class="tail" stroke-width="10"/>
+            <path id="succCore" class="core" stroke-width="6"/>
+            <circle id="succFlare" class="flare" r="3" cx="50" cy="5"/>
+          </g>
+        </svg>
       </div>
-      <div class="kpi">
-        <div class="ring" id="ringAppear" style="--p:0deg"></div>
-        <div>
-          <strong id="kpiAppear">—%</strong>
-          <small>출현 확률</small>
-        </div>
-      </div>
-      <div class="kpi">
-<div class="ring" style="--p:360deg; --accent:#888"></div>
-        <div>
-          <strong id="kpiTries">—</strong>
-          <small>성공 기대값(시도)</small>
-        </div>
+      <div>
+        <strong id="kpiSuccess">—%</strong>
+        <small>환각(8등급) 확률</small>
       </div>
     </div>
 
-    <div style="margin-top:14px">
-      <div class="row">
-        <div class="col"><span class="muted">총 경우의 수:</span> <span class="badge" id="totMatches">—</span></div>
-        <div class="col"><span class="muted">환각 매칭:</span> <span class="badge" id="rank8Matches">—</span></div>
-        <div class="col"><span class="muted">전수(고정):</span> <span class="badge">178,750</span></div>
+    <!-- 출현 확률 (게이지는 2%까지만 채움) -->
+    <div class="kpi">
+      <div class="ringwrap">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle id="apPath" cx="50" cy="50" r="43" fill="none"/>
+          <use href="#apPath" class="track" stroke-width="10" transform="rotate(-90 50 50)"/>
+          <use id="apFill"  href="#apPath" class="fill"  stroke="#7fd4ff" stroke-width="10"
+               transform="rotate(-90 50 50)" stroke-dasharray="0 1" stroke-dashoffset="0"/>
+        </svg>
+      </div>
+      <div>
+        <strong id="kpiAppear">—%</strong>
+        <span id="apBadge" class="badge" style="display:none">max 2% 게이지</span>
+        <small>출현 확률(게이지는 2%까지만 채움)</small>
       </div>
     </div>
 
-    <details style="margin-top:12px">
-      <summary>등급 분포 자세히 보기</summary>
-      <div id="dist"></div>
-    </details>
-  </section>
+    <!-- 성공 기대값 (200↑ 항상 100%) -->
+    <div class="kpi">
+      <div class="ringwrap">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle id="trPath" cx="50" cy="50" r="43" fill="none"/>
+          <use href="#trPath" class="track" stroke-width="10" transform="rotate(-90 50 50)"/>
+          <use id="trFill"  href="#trPath" class="fill" stroke="#999" stroke-width="10"
+               transform="rotate(-90 50 50)" stroke-dasharray="0 1" stroke-dashoffset="0"/>
+        </svg>
+      </div>
+      <div>
+        <strong id="kpiTries">—</strong>
+        <small>성공 기대값(시도) — 200↑는 항상 100%</small>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:14px">
+    <div class="row">
+      <div class="col"><span class="muted">총 경우의 수:</span> <span class="badge" id="totMatches">—</span></div>
+      <div class="col"><span class="muted">환각 매칭:</span> <span class="badge" id="rank8Matches">—</span></div>
+      <div class="col"><span class="muted">전수(고정):</span> <span class="badge">178,750</span></div>
+    </div>
+  </div>
+
+  <details style="margin-top:12px">
+    <summary>등급 분포 자세히 보기</summary>
+    <div id="dist"></div>
+  </details>
+</section>
 
   <!-- 우하단: 이미지 공간 -->
   <section class="card">
@@ -636,39 +686,166 @@ function selectPetName(n){
   }
   showKpis(null);
 }
+/* ===== 공통 유틸 ===== */
+function getCSS(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function resolveR(el){
+  const rSelf = parseFloat(el.getAttribute('r'));
+  if (isFinite(rSelf)) return rSelf;
+  const href = el.getAttribute('href') || el.getAttribute('xlink:href');
+  if (href && href[0]==='#'){
+    const ref = el.ownerSVGElement.getElementById(href.slice(1));
+    const rr = parseFloat(ref && ref.getAttribute('r'));
+    if (isFinite(rr)) return rr;
+  }
+  return 45;
+}
+function makeRing(fillEl, maskStrokeEl, colorGetter){
+  const r = resolveR(fillEl);
+  const C = 2 * Math.PI * r;
+  const baseStroke = fillEl.style.stroke || fillEl.getAttribute('stroke') || '#fff';
+  const strokeOn  = (col)=>{ fillEl.style.stroke = col || (colorGetter? colorGetter(): baseStroke); };
+  const strokeOff = ()=>{ fillEl.style.stroke = 'none'; };
+  const clamp01 = (x)=> (Number.isFinite(x)? Math.max(0, Math.min(1,x)) : 0);
 
-/* ========= KPI 렌더 ========= */
+  function setFrac(frac){
+    const f = clamp01(frac);
+    if (f === 0){
+      fillEl.setAttribute('stroke-dasharray','0 1');
+      fillEl.setAttribute('stroke-dashoffset','0');
+      if(maskStrokeEl){
+        maskStrokeEl.setAttribute('stroke-dasharray','0 1');
+        maskStrokeEl.setAttribute('stroke-dashoffset','0');
+      }
+      strokeOff();
+      return;
+    }
+    const dash=C, gap=C, off=(1-f)*C;
+    fillEl.setAttribute('stroke-dasharray', `${dash} ${gap}`);
+    fillEl.setAttribute('stroke-dashoffset', `${off}`);
+    if(maskStrokeEl){
+      maskStrokeEl.setAttribute('stroke-dasharray', `${dash} ${gap}`);
+      maskStrokeEl.setAttribute('stroke-dashoffset', `${off}`);
+    }
+    strokeOn();
+  }
+  return { setFrac, C };
+}
+function polar0(cx,cy,r,deg){ const t=deg*Math.PI/180; return [cx + r*Math.cos(t), cy + r*Math.sin(t)]; }
+function arcPath0(cx,cy,r,deg0,deg1){
+  let s=deg0, e=deg1; while(e<s) e+=360;
+  const span=e-s, large=span>180?1:0;
+  const [x0,y0]=polar0(cx,cy,r,s), [x1,y1]=polar0(cx,cy,r,e);
+  return `M ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1}`;
+}
+
+/* ===== 1) 성공% + HUD ===== */
+const succFill = document.getElementById('succFill');
+const succMaskStroke = document.getElementById('succMaskStroke');
+const { setFrac: _succSetFrac } = makeRing(succFill, succMaskStroke, ()=>getCSS('--accent'));
+const hud = document.getElementById('succHUD');
+const tail= document.getElementById('succTail');
+const core= document.getElementById('succCore');
+const flare= document.getElementById('succFlare');
+const SUCCR = resolveR(succFill);
+let head=0, run=false, lastTs=0;
+
+function tick(ts){
+  if(!run) return;
+  if(!lastTs) lastTs=ts;
+  const dt=(ts-lastTs)/1000; lastTs=ts;
+  const circum=2*Math.PI*SUCCR, pxPerSec=parseFloat(getCSS('--hud-speed'))||120;
+  const degPerSec=(pxPerSec/circum)*360;
+  head=(head + degPerSec*dt) % 360;
+
+  const TAIL_SPAN=360*0.22, CORE_SPAN=360*0.10;
+  tail.setAttribute('d', arcPath0(50,50,SUCCR, head-TAIL_SPAN, head));
+  core.setAttribute('d', arcPath0(50,50,SUCCR, head-CORE_SPAN, head));
+  const [fx,fy]=polar0(50,50,SUCCR, head);
+  flare.setAttribute('cx', fx.toFixed(2)); flare.setAttribute('cy', fy.toFixed(2));
+  requestAnimationFrame(tick);
+}
+function setSuccess(pct){
+  const f = Math.max(0, Math.min(100, Number(pct)||0))/100;
+  _succSetFrac(f);
+  document.getElementById('kpiSuccess').textContent = (f*100).toFixed(4) + '%';
+  if(f<=0){
+    hud.style.opacity=0; run=false; lastTs=0; head=0;
+    tail.setAttribute('d',''); core.setAttribute('d','');
+  }else{
+    hud.style.opacity=1; if(!run){ run=true; lastTs=0; requestAnimationFrame(tick); }
+  }
+}
+window.setSuccess = setSuccess;
+
+/* ===== 2) 출현% — 게이지 최대 2% ===== */
+const apFill = document.getElementById('apFill');
+const { setFrac: _apSetFrac } = makeRing(apFill, null, ()=> '#7fd4ff');
+function setAppear(pctReal){
+  const p = Math.max(0, Number(pctReal)||0);
+  const frac = Math.min(p, 2) / 2;       // 0~2% → 0~100%
+  _apSetFrac(frac);
+  document.getElementById('kpiAppear').textContent = p.toFixed(6) + '%';
+  document.getElementById('apBadge').style.display = (p>2 ? '' : 'none');
+}
+window.setAppear = setAppear;
+
+/* ===== 3) 기대값 — 200↑ 항상 100% + 색상(초/노/빨) ===== */
+const trFill = document.getElementById('trFill');
+function colorByTries(x){
+  return (x<=5)  ? getCSS('--ok')
+       : (x<=20) ? getCSS('--warn')
+       :           getCSS('--bad');
+}
+const { setFrac: _trSetFrac } = makeRing(trFill, null, ()=> colorByTries(currTries));
+let currTries = 1;
+function setTries(t){
+  currTries = Math.max(1, Number(t)||1);
+  let frac;
+  if(currTries>=200) frac=1;
+  else{
+    const r = (Math.log10(currTries)-Math.log10(1)) / (Math.log10(200)-Math.log10(1));
+    frac = Math.max(0, Math.min(1, r));
+  }
+  trFill.style.stroke = colorByTries(currTries);
+  _trSetFrac(frac);
+  document.getElementById('kpiTries').textContent = (Number.isFinite(t)? Math.round(currTries) : '—');
+}
+window.setTries = setTries;
+/* ===== KPI 렌더 교체 ===== */
 function showKpis(res){
   if(!res){
+    // 값 표시
     kpiSuccess.textContent = "—%";
     kpiAppear .textContent = "—%";
     kpiTries  .textContent = "—";
-    // 성공 링
-const successDeg = 360 * successPct / 100;
-ringSuccess.style.setProperty("--p", successDeg + "deg");
-ringSuccess.style.setProperty("--sweep-on", successDeg > 0 ? 1 : 0);
-
-// 출현 링(효과 없음, 기존대로 각도만)
-const appearDeg = 360 * appear / 100;
-ringAppear.style.setProperty("--p", appearDeg + "deg");
+    // 링 리셋(크기·비율 유지)
+    setSuccess(0);
+    setAppear(0);
+    setTries(1);
+    // 부가정보 리셋
     totMatches.textContent = "—";
     rank8Matches.textContent = "—";
     distBox.innerHTML = "";
     return;
   }
+
   const matches = res.matches|0;
   const rank8   = res.rank8|0;
-  const appear = matches/TOTAL*100;
-  const successPct = matches? (rank8/matches*100): 0;
-  const tries = successPct>0? (100/successPct) : Infinity;
+  const appear  = matches/TOTAL*100;                         // 실제 출현 %
+  const successPct = matches ? (rank8/matches*100) : 0;      // 성공 %
+  const tries = successPct > 0 ? (100/successPct) : Infinity;
 
+  // 수치 텍스트
   kpiSuccess.textContent = fmtPct(successPct);
   kpiAppear .textContent = fmtPct(appear);
   kpiTries  .textContent = (isFinite(tries) ? tries.toFixed(2) : "—");
 
-  ringSuccess.style.setProperty("--p", (360 * successPct / 100) + "deg");
-  ringAppear .style.setProperty("--p", (360 * appear     / 100) + "deg");
+  // 링 반영
+  setSuccess(successPct);
+  setAppear(appear);
+  setTries(isFinite(tries) ? tries : 200); // 성공확률 0% → 200으로 고정(항상 100%)
 
+  // 요약 수치 및 분포
   totMatches.textContent   = matches.toLocaleString();
   rank8Matches.textContent = rank8.toLocaleString();
 
