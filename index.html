@@ -28,7 +28,8 @@
   :root{
     --bg:#0f1115; --panel:#161a22; --muted:#8a9099; --accent:#6aa0ff;
     --ok:#35c759; --warn:#ffb300; --bad:#ff5171; --chip:#232a36;
-    --ring:#1f2530; --text:#e8ecf3; --highlight:#fff;
+    --ring:#1f2530; --text:#e8ecf3; --highlight:#fff;  --ring-size: 60px;
+  --ring-thickness: 6px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -81,17 +82,19 @@
   @media (max-width: 720px){ .kpis{grid-template-columns: 1fr} }
   .kpi{ display:flex; gap:14px; align-items:center; border:1px solid #2a3040; border-radius:14px; padding:14px; background:radial-gradient(120px 120px at 20% -10%, #11224444, transparent); }
 .ring{
-  width:60px;
-  aspect-ratio:1 / 1;          /* 정사각 보장 (반응형에서도 원 유지) */
-  border-radius:50%;
-  --p: 0deg;                    /* 채워질 각도(자바스크립트에서 덮어씀) */
-  --thickness: 6px;             /* 도넛 두께 */
+  width: var(--ring-size);
+  height: var(--ring-size);
+  flex: 0 0 var(--ring-size);   /* flex 컨테이너에서 축소/확대 방지 */
+  display: inline-block;
+  border-radius: 50%;
+  /* 기본 각도는 0deg (JS가 --p를 덮어씀) */
+  --p: 0deg;
   background: conic-gradient(var(--accent) 0 var(--p), var(--ring) 0);
-  /* 가운데를 파내는 마스크(사파리 호환 포함) */
+  /* 가운데를 뚫는 마스크(도넛) */
   -webkit-mask: radial-gradient(farthest-side,
-                 transparent calc(100% - var(--thickness)), #000 0);
+                 transparent calc(100% - var(--ring-thickness)), #000 0);
   mask: radial-gradient(farthest-side,
-         transparent calc(100% - var(--thickness)), #000 0);
+         transparent calc(100% - var(--ring-thickness)), #000 0);
 }
 
   .kpi strong{font-size:20px; color:var(--highlight)}
@@ -105,6 +108,18 @@
   .imgbox{width:100%; aspect-ratio: 16/9; border:1px dashed #334055; border-radius:12px; display:grid; place-items:center; background:#0d1117; overflow:hidden;}
   .imgbox img{width:100%; height:100%; object-fit:cover; display:block}
   .stepper{display:flex; gap:6px; margin-top:6px}
+  
+  /* 숫자 자릿수 고정 + 등폭 숫자 */
+#kpiSuccess, #kpiAppear{
+  display:inline-block;
+  min-width: 9ch;               /* "100.0000%" 정도를 수용 */
+  font-variant-numeric: tabular-nums;
+}
+#kpiTries{
+  display:inline-block;
+  min-width: 6ch;               /* "123.45" 정도 */
+  font-variant-numeric: tabular-nums;
+}
 </style>
 </head>
 <body>
