@@ -90,33 +90,29 @@
   width: var(--ring-size);
   height: var(--ring-size);
   flex: 0 0 var(--ring-size);
-  display: inline-block;
   position: relative;
   border-radius: 50%;
-  overflow: hidden;                  /* 블러가 밖으로 보이지 않게 */
+  overflow: hidden;
   isolation: isolate;
-  --p: 0deg;                         /* 진행각도 (JS에서 세팅) */
+  --p: 0deg; /* JS에서 진행각 설정 */
   background: conic-gradient(var(--accent) 0 var(--p), var(--ring) 0);
-
-  /* 도넛 모양(속 비우기) 마스크 */
-  -webkit-mask: radial-gradient(farthest-side,
-                  transparent calc(100% - var(--ring-thickness)), #000 0);
-          mask: radial-gradient(farthest-side,
-                  transparent calc(100% - var(--ring-thickness)), #000 0);
+  /* 속 비우기(도넛) 마스크 */
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-thickness)), #000 0);
+          mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-thickness)), #000 0);
 }
 
-/* HUD 스윕 효과 — 레이아웃 영향 없음(absolute + inset:0) */
-.ring::after{
+
+/* ★ 성공 링에만 HUD 스윕 */
+#ringSuccess::after{
   content:"";
   position:absolute; inset:0;
   border-radius:50%;
   pointer-events:none;
-  opacity: var(--sweep-opacity);
+  opacity: calc(var(--sweep-on, 0) * var(--sweep-opacity)); /* 진행 0%면 완전 숨김 */
   filter: blur(var(--sweep-blur));
   will-change: transform;
   animation: ring-sweep var(--sweep-speed) linear infinite;
-
-  /* 얇은 빛 웨지들이 반복되며 회전 */
+  /* 얇은 빛 웨지 패턴 */
   background:
     repeating-conic-gradient(
       from -90deg,
@@ -124,15 +120,14 @@
       rgba(255,255,255,.9)  6deg 7.2deg,
       rgba(255,255,255,0)  7.2deg 14.4deg
     );
-
-  /* (A) 도넛 모양으로 구멍 뚫기 + (B) 진행각까지만 보이도록 마스킹 */
+  /* (1) 도넛 모양으로 구멍 + (2) 진행각까지만 표시 */
   -webkit-mask-image:
     radial-gradient(farthest-side, transparent calc(100% - var(--ring-thickness)), #000 0),
-    conic-gradient(#000 0 var(--p), transparent 0);
-  -webkit-mask-composite: source-in;   /* 두 마스크 교집합 */
+    conic-gradient(#000 0 calc(var(--p) + .0001deg), transparent 0); /* 0deg 버그회피용 +ε */
+  -webkit-mask-composite: source-in;
           mask-image:
     radial-gradient(farthest-side, transparent calc(100% - var(--ring-thickness)), #000 0),
-    conic-gradient(#000 0 var(--p), transparent 0);
+    conic-gradient(#000 0 calc(var(--p) + .0001deg), transparent 0);
           mask-composite: intersect;
 }
 
@@ -142,9 +137,13 @@
 #kpiSuccess, #kpiAppear{ display:inline-block; min-width: 9ch; font-variant-numeric: tabular-nums; }
 #kpiTries{   display:inline-block; min-width: 6ch; font-variant-numeric: tabular-nums; }
 
+
 @media (prefers-reduced-motion: reduce){
-  .ring::after{ animation: none; opacity: .25; }
+  #ringSuccess::after{ animation: none; opacity: .25; }
 }
+
+
+
 
   .kpi strong{font-size:20px; color:var(--highlight)}
   .kpi small{display:block; color:var(--muted)}
@@ -644,8 +643,14 @@ function showKpis(res){
     kpiSuccess.textContent = "—%";
     kpiAppear .textContent = "—%";
     kpiTries  .textContent = "—";
-    ringSuccess.style.setProperty("--p","0deg");
-    ringAppear .style.setProperty("--p","0deg");
+    // 성공 링
+const successDeg = 360 * successPct / 100;
+ringSuccess.style.setProperty("--p", successDeg + "deg");
+ringSuccess.style.setProperty("--sweep-on", successDeg > 0 ? 1 : 0);
+
+// 출현 링(효과 없음, 기존대로 각도만)
+const appearDeg = 360 * appear / 100;
+ringAppear.style.setProperty("--p", appearDeg + "deg");
     totMatches.textContent = "—";
     rank8Matches.textContent = "—";
     distBox.innerHTML = "";
