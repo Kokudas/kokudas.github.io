@@ -80,8 +80,20 @@
   .kpis{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px}
   @media (max-width: 720px){ .kpis{grid-template-columns: 1fr} }
   .kpi{ display:flex; gap:14px; align-items:center; border:1px solid #2a3040; border-radius:14px; padding:14px; background:radial-gradient(120px 120px at 20% -10%, #11224444, transparent); }
-  .ring{width:60px; height:60px; border-radius:50%; background:conic-gradient(var(--accent) 0deg, var(--accent) var(--p,0deg), var(--ring) var(--p,0deg)); display:grid; place-items:center}
-  .ring::after{content:""; width:48px; height:48px; background:#0c1016; border-radius:50%; display:block}
+.ring{
+  width:60px;
+  aspect-ratio:1 / 1;          /* 정사각 보장 (반응형에서도 원 유지) */
+  border-radius:50%;
+  --p: 0deg;                    /* 채워질 각도(자바스크립트에서 덮어씀) */
+  --thickness: 6px;             /* 도넛 두께 */
+  background: conic-gradient(var(--accent) 0 var(--p), var(--ring) 0);
+  /* 가운데를 파내는 마스크(사파리 호환 포함) */
+  -webkit-mask: radial-gradient(farthest-side,
+                 transparent calc(100% - var(--thickness)), #000 0);
+  mask: radial-gradient(farthest-side,
+         transparent calc(100% - var(--thickness)), #000 0);
+}
+
   .kpi strong{font-size:20px; color:var(--highlight)}
   .kpi small{display:block; color:var(--muted)}
   .table{width:100%; border-collapse:collapse; font-size:13px}
@@ -219,7 +231,7 @@
         </div>
       </div>
       <div class="kpi">
-        <div class="ring" style="--p:360deg; background:conic-gradient(#888 360deg, #888 360deg, var(--ring) 360deg)"></div>
+<div class="ring" style="--p:360deg; --accent:#888"></div>
         <div>
           <strong id="kpiTries">—</strong>
           <small>성공 기대값(시도)</small>
