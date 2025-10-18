@@ -530,7 +530,41 @@ function petCard(p) {
   return card;
 }
 
+/* ====== 문턱(최소치) 우선 정렬 ====== */
 function sortRows(rows, f) {
+  // 1) 활성화된 최소치(문턱)를 큰 값 우선으로 정렬하여 우선순위 결정
+  const minMap = [
+    ["min_grow_hp",  p=>p.grow?.hp  ?? -Infinity],
+    ["min_grow_atk", p=>p.grow?.atk ?? -Infinity],
+    ["min_grow_def", p=>p.grow?.def ?? -Infinity],
+    ["min_grow_agi", p=>p.grow?.agi ?? -Infinity],
+    ["min_init_hp",  p=>p.init?.hp  ?? -Infinity],
+    ["min_init_atk", p=>p.init?.atk ?? -Infinity],
+    ["min_init_def", p=>p.init?.def ?? -Infinity],
+    ["min_init_agi", p=>p.init?.agi ?? -Infinity],
+  ];
+  const actives = minMap
+    .map(([fk,get]) => ({ fk, get, val: Number(f[fk]) || 0 }))
+    .filter(o => o.val > 0)
+    .sort((a,b) => b.val - a.val); // 문턱 큰 것부터
+
+  if (actives.length) {
+    // 2) 1순위 문턱 값 오름차순 → 2순위 문턱 값 오름차순 → (선택) 주속성 높은 순 → 이름
+    return rows.slice().sort((a,b)=>{
+      for (const {get} of actives) {
+        const da = get(a), db = get(b);
+        if (da !== db) return da - db; // 문턱에 더 "바짝 붙은" 값이 먼저
+      }
+      if (f.attrPick && f.attrPick!=="전체" && f.attrPick!=="듀얼") {
+        const va = a.attr?.[f.attrPick] ?? 0;
+        const vb = b.attr?.[f.attrPick] ?? 0;
+        if (va !== vb) return vb - va; // 주속성 수치 큰 순
+      }
+      return (a.name||"").localeCompare(b.name||"");
+    });
+  }
+
+  // 3) 최소치가 없으면 기존 정렬(주속성 기준) 유지
   const key = f.attrPick;
   if (!key || key === "전체" || key === "듀얼") return rows;
   const getv = (p) => (p.attr && typeof p.attr[key] === "number") ? p.attr[key] : 0;
