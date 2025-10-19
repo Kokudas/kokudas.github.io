@@ -7980,5 +7980,395 @@
     "route": "은빛 상자 랜덤 페트",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_y0uL5pQg_9a12b36ab6d63a90b2ea39ee86b5f96badec688b.gif"
+  },
+        {
+    "name": "쟈무시",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 10,
+      "수": 0,
+      "화": 0,
+      "풍": 0
+    },
+    "init": {
+      "hp": 63,
+      "atk": 11.03,
+      "def": 13.63,
+      "agi": 1.8
+    },
+    "grow": {
+      "hp": 11.42,
+      "atk": 2,
+      "def": 2.47,
+      "agi": 0.33
+    },
+    "route": "지원/마일리지 포인트 상점",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_zBtpLcDi_0ee8b9b6b04ac549a1a51ec8ff55e05aae91fca9.gif"
+  },
+          {
+    "name": "샤우트",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 2,
+      "수": 0,
+      "화": 0,
+      "풍": 8
+    },
+    "init": {
+      "hp": 64.92,
+      "atk": 12.13,
+      "def": 11.91,
+      "agi": 2.52
+    },
+    "grow": {
+      "hp": 11.77,
+      "atk": 2.2,
+      "def": 2.16,
+      "agi": 0.46
+    },
+    "route": "지원/마일리지 포인트 상점",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_dQxPZtkh_8e99ccd7fa454eacbb06534fb6efd8469e030d5b.gif"
+  },
+          {
+    "name": "마스타로",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 4,
+      "화": 6,
+      "풍": 0
+    },
+    "init": {
+      "hp": 56.12,
+      "atk": 12.78,
+      "def": 6.71,
+      "agi": 8.12
+    },
+    "grow": {
+      "hp": 10.21,
+      "atk": 2.33,
+      "def": 1.22,
+      "agi": 1.48
+    },
+    "route": "지원/마일리지 포인트 상점",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/157bf01a1746a3749294bca554ba4c34_djiWyaNn_3ecb4e4bbb51339ffff4111227fdcd40c98cafca.gif"
+  },
+          {
+    "name": "구루마루",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 6,
+      "수": 0,
+      "화": 0,
+      "풍": 4
+    },
+    "init": {
+      "hp": 59.38,
+      "atk": 12.94,
+      "def": 7.77,
+      "agi": 8.38
+    },
+    "grow": {
+      "hp": 10.33,
+      "atk": 2.25,
+      "def": 1.35,
+      "agi": 1.46
+    },
+    "route": "지원/마일리지 포인트 상점",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_TlHX8RPu_9db12f003ae79cc16b3ecd27284fb600d068504f.gif"
+  },
+          {
+    "name": "기로아치",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 7,
+      "화": 3,
+      "풍": 0
+    },
+    "init": {
+      "hp": 54.12,
+      "atk": 11.65,
+      "def": 7.76,
+      "agi": 6.36
+    },
+    "grow": {
+      "hp": 10.26,
+      "atk": 2.21,
+      "def": 1.47,
+      "agi": 1.21
+    },
+    "route": "폐기물 광산 7층 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_FC7EoTWq_f6f72fbdad986e2ae6b9638daa1b92c43cbc0056.gif"
+  },
+          {
+    "name": "호르카",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 6,
+      "수": 4,
+      "화": 0,
+      "풍": 0
+    },
+    "init": {
+      "hp": 51.17,
+      "atk": 10.69,
+      "def": 6.96,
+      "agi": 7.25
+    },
+    "grow": {
+      "hp": 10.12,
+      "atk": 2.11,
+      "def": 1.38,
+      "agi": 1.43
+    },
+    "route": "얼음성 입구 홀 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_1R5PMUTI_f9bfddb225461cd61cdb05fa79e194d1db8ac5cc.gif"
+  },
+          {
+    "name": "펠트르돈",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 2,
+      "수": 8,
+      "화": 0,
+      "풍": 0
+    },
+    "init": {
+      "hp": 55.51,
+      "atk": 12.23,
+      "def": 7.55,
+      "agi": 6.89
+    },
+    "grow": {
+      "hp": 10.14,
+      "atk": 2.23,
+      "def": 1.38,
+      "agi": 1.26
+    },
+    "route": "크로아치의 방 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_uYQ9L3dt_223830566f9e3ab297aa569e1fe950eb8725b964.gif"
+  },
+          {
+    "name": "타키온",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 1,
+      "수": 9,
+      "화": 0,
+      "풍": 0
+    },
+    "init": {
+      "hp": 52.78,
+      "atk": 10.47,
+      "def": 6.33,
+      "agi": 7.93
+    },
+    "grow": {
+      "hp": 10.44,
+      "atk": 2.07,
+      "def": 1.25,
+      "agi": 1.57
+    },
+    "route": "오만의 방 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_HvXmuV51_ae26d652cde2ef03ebbc2f6648b07617bde516cb.gif"
+  },
+          {
+    "name": "푸타푸타",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 6,
+      "수": 0,
+      "화": 0,
+      "풍": 4
+    },
+    "init": {
+      "hp": 42.35,
+      "atk": 8.29,
+      "def": 5.12,
+      "agi": 8.69
+    },
+    "grow": {
+      "hp": 9.53,
+      "atk": 1.86,
+      "def": 1.15,
+      "agi": 1.96
+    },
+    "route": "교만의 방 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_tMcrPB0i_3a78fd557b585da8d7e0651b7dfeee7b91d0b755.gif"
+  },
+          {
+    "name": "라이쿠스",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 3,
+      "수": 7,
+      "화": 0,
+      "풍": 0
+    },
+    "init": {
+      "hp": 56.23,
+      "atk": 10.53,
+      "def": 10.53,
+      "agi": 2.65
+    },
+    "grow": {
+      "hp": 11.12,
+      "atk": 2.08,
+      "def": 2.08,
+      "agi": 0.52
+    },
+    "route": "탐욕의 방 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_Paz1xmGb_98f8de52d3e6bc802f11c8f065e2a09adb90dee7.gif"
+  },
+          {
+    "name": "라피노",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 2,
+      "수": 8,
+      "화": 0,
+      "풍": 0
+    },
+    "init": {
+      "hp": 54.99,
+      "atk": 11.94,
+      "def": 7.26,
+      "agi": 6.89
+    },
+    "grow": {
+      "hp": 10.47,
+      "atk": 2.27,
+      "def": 1.38,
+      "agi": 1.31
+    },
+    "route": "전리품의 방 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/157bf01a1746a3749294bca554ba4c34_XKL9ZpdB_ad5156247dd6d88470a2d7c2644ff539bcf62fa6.gif"
+  },
+          {
+    "name": "카멜로돈",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 0,
+      "화": 9,
+      "풍": 1
+    },
+    "init": {
+      "hp": 56.29,
+      "atk": 11.76,
+      "def": 7.31,
+      "agi": 8.45
+    },
+    "grow": {
+      "hp": 10.28,
+      "atk": 2.15,
+      "def": 1.34,
+      "agi": 1.54
+    },
+    "route": "진홍의 지하 동굴(나) 7층 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_GZbrjCa7_4fe8e1e5e8415a47cb1fe5c296aa6994d840aae3.gif"
+  },
+          {
+    "name": "아비시니안",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 0,
+      "화": 2,
+      "풍": 8
+    },
+    "init": {
+      "hp": 49.53,
+      "atk": 11.04,
+      "def": 6.83,
+      "agi": 7.67
+    },
+    "grow": {
+      "hp": 9.81,
+      "atk": 2.19,
+      "def": 1.35,
+      "agi": 1.52
+    },
+    "route": "천지의 동굴 8층 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_IMA3JxpT_cd17fb6eccf2dddbe2cf6e87601910b9ec025bea.gif"
+  },
+          {
+    "name": "뉴로아",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 5,
+      "수": 5,
+      "화": 0,
+      "풍": 0
+    },
+    "init": {
+      "hp": 50.26,
+      "atk": 9.8,
+      "def": 7.94,
+      "agi": 5.17
+    },
+    "grow": {
+      "hp": 10.38,
+      "atk": 2.02,
+      "def": 1.64,
+      "agi": 1.07
+    },
+    "route": "벽청의 동굴(나) 8층 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_pEAc0MgI_c5a6fd27fb3747b5b913ce4f9df16acec4ea324a.gif"
+  },
+          {
+    "name": "호크곤",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 7,
+      "수": 3,
+      "화": 0,
+      "풍": 0
+    },
+    "init": {
+      "hp": 55.56,
+      "atk": 10.77,
+      "def": 8.39,
+      "agi": 5.16
+    },
+    "grow": {
+      "hp": 11,
+      "atk": 2.13,
+      "def": 1.66,
+      "agi": 1.02
+    },
+    "route": "유리의 동굴 13층 (동29,남19) 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_IZ3KdXCv_9e1fbc047835fd3956bde2d7262337906adcf193.gif"
   }
 ]
