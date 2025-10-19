@@ -532,48 +532,53 @@ function petCard(p) {
 
 /* ====== 문턱(최소치) 우선 정렬 ====== */
 function sortRows(rows, f) {
-  // 1) 활성화된 최소치(문턱)를 큰 값 우선으로 정렬하여 우선순위 결정
-  const minMap = [
-    ["min_grow_hp",  p=>p.grow?.hp  ?? -Infinity],
-    ["min_grow_atk", p=>p.grow?.atk ?? -Infinity],
-    ["min_grow_def", p=>p.grow?.def ?? -Infinity],
-    ["min_grow_agi", p=>p.grow?.agi ?? -Infinity],
-    ["min_init_hp",  p=>p.init?.hp  ?? -Infinity],
-    ["min_init_atk", p=>p.init?.atk ?? -Infinity],
-    ["min_init_def", p=>p.init?.def ?? -Infinity],
-    ["min_init_agi", p=>p.init?.agi ?? -Infinity],
-  ];
-  const actives = minMap
-    .map(([fk,get]) => ({ fk, get, val: Number(f[fk]) || 0 }))
-    .filter(o => o.val > 0)
-    .sort((a,b) => b.val - a.val); // 문턱 큰 것부터
+  // 문턱(최소치) 하나라도 켜져 있으면 문턱-근접도 정렬 사용
+  const anyMin =
+    f.min_init_hp  > 0 || f.min_init_atk > 0 || f.min_init_def > 0 || f.min_init_agi > 0 ||
+    f.min_grow_hp  > 0 || f.min_grow_atk > 0 || f.min_grow_def > 0 || f.min_grow_agi > 0;
 
-  if (actives.length) {
-    // 2) 1순위 문턱 값 오름차순 → 2순위 문턱 값 오름차순 → (선택) 주속성 높은 순 → 이름
-    return rows.slice().sort((a,b)=>{
-      for (const {get} of actives) {
-        const da = get(a), db = get(b);
-        if (da !== db) return da - db; // 문턱에 더 "바짝 붙은" 값이 먼저
+  const delta = (v, thr) =>
+    (Number.isFinite(v) && Number.isFinite(thr)) ? Math.max(0, v - thr) : Number.POSITIVE_INFINITY;
+
+  if (anyMin) {
+    // ✅ 1순위 키: 성장 순발력(AGI) 문턱에 얼마나 "가까운지" (작을수록 위)
+    return rows.slice().sort((a, b) => {
+      const dA_agi = delta(a.grow?.agi, f.min_grow_agi || 0);
+      const dB_agi = delta(b.grow?.agi, f.min_grow_agi || 0);
+      if (dA_agi !== dB_agi) return dA_agi - dB_agi;
+
+      // 2순위(가벼운 타이브레이커): 성장 공격력 → 방어 → 내구 근접도
+      const dA_atk = delta(a.grow?.atk, f.min_grow_atk || 0) - delta(b.grow?.atk, f.min_grow_atk || 0);
+      if (dA_atk !== 0) return dA_atk;
+
+      const dA_def = delta(a.grow?.def, f.min_grow_def || 0) - delta(b.grow?.def, f.min_grow_def || 0);
+      if (dA_def !== 0) return dA_def;
+
+      const dA_hp  = delta(a.grow?.hp,  f.min_grow_hp  || 0) - delta(b.grow?.hp,  f.min_grow_hp  || 0);
+      if (dA_hp !== 0) return dA_hp;
+
+      // 마지막 타이: (선택) 주 속성 강한 순 → 이름
+      const key = f.attrPick;
+      if (key && key !== "전체" && key !== "듀얼") {
+        const getv = (p) => (p.attr && typeof p.attr[key] === "number") ? p.attr[key] : 0;
+        const dv = getv(b) - getv(a); // 큰 값 우선
+        if (dv !== 0) return dv;
       }
-      if (f.attrPick && f.attrPick!=="전체" && f.attrPick!=="듀얼") {
-        const va = a.attr?.[f.attrPick] ?? 0;
-        const vb = b.attr?.[f.attrPick] ?? 0;
-        if (va !== vb) return vb - va; // 주속성 수치 큰 순
-      }
-      return (a.name||"").localeCompare(b.name||"");
+      return (a.name || "").localeCompare(b.name || "");
     });
   }
 
-  // 3) 최소치가 없으면 기존 정렬(주속성 기준) 유지
+  // 문턱이 없으면 기존 정렬(주 속성 강한 순) 유지
   const key = f.attrPick;
   if (!key || key === "전체" || key === "듀얼") return rows;
   const getv = (p) => (p.attr && typeof p.attr[key] === "number") ? p.attr[key] : 0;
-  return rows.slice().sort((a,b)=> {
+  return rows.slice().sort((a, b) => {
     const dv = getv(b) - getv(a);
     if (dv !== 0) return dv;
-    return (a.name||"").localeCompare(b.name||"");
+    return (a.name || "").localeCompare(b.name || "");
   });
 }
+
 
 function ensureMountAtLeastOne(e) {
   const boxes = $$(".mount");
