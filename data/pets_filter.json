@@ -7750,7 +7750,7 @@
       {
     "name": "도철",
     "searchable": true,
-    "grade": "일반",
+    "grade": "상급",
     "attr": {
       "지": 0,
       "수": 4,
@@ -7776,7 +7776,7 @@
       {
     "name": "고로",
     "searchable": true,
-    "grade": "일반",
+    "grade": "상급",
     "attr": {
       "지": 0,
       "수": 0,
@@ -7802,7 +7802,7 @@
       {
     "name": "가스트",
     "searchable": true,
-    "grade": "일반",
+    "grade": "상급",
     "attr": {
       "지": 8,
       "수": 0,
