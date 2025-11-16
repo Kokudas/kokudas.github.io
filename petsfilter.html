@@ -23,8 +23,8 @@
     --grade-normal-tx: #0f1115;
     --grade-adv-bg: radial-gradient(120% 120% at 20% 20%, #a8ffdf 0%, #2ecc71 70%, #0f8f4f 100%);
     --grade-adv-tx: #0b1b14;
-    --grade-top-bg: radial-gradient(130% 130% at 30% 30%, #e8ffff 0%, #b8e6ff 45%, #9bd9ff 70%, #e6f7ff 100%);
-    --grade-top-tx: #0a1a22;
+    --grade-top-bg: radial-gradient(130% 130% at 30% 30%, #fff8e1 0%, #ffe082 40%, #ffca28 70%, #ffb300 100%);
+    --grade-top-tx: #3b2a00;
     --toast-bg: #101826;
     --toast-bd: #2a3a59;
   }
@@ -86,7 +86,11 @@
   .oval.dom{box-shadow: 0 0 0 2px rgba(255,255,255,.06), 0 0 0 3px rgba(122,162,255,.18)}
   .g-oval, .m-oval{display:inline-flex; align-items:center; justify-content:center; height:26px; padding:0 12px; border-radius:999px; font-weight:800; font-size:12px; letter-spacing:.3px; border:1px solid rgba(255,255,255,.15)}
   .g-normal{background:var(--grade-normal-bg); color:var(--grade-normal-tx)} .g-adv{background:var(--grade-adv-bg); color:var(--grade-adv-tx)} .g-top{background:var(--grade-top-bg); color:var(--grade-top-tx)}
-  .m-yes{background: radial-gradient(120% 120% at 20% 20%, #a8ffdf 0%, #2ecc71 70%, #0f8f4f 100%); color:#0b1b14} .m-no{background: radial-gradient(120% 120% at 20% 20%, #d4d7dd 0%, #9aa1ad 65%, #6c7482 100%); color:#0f1115}
+  .m-yes{
+    background: radial-gradient(120% 120% at 20% 20%, #f3e8ff 0%, #d8b4fe 40%, #a855f7 70%, #6d28d9 100%);
+    color:#f9f5ff;
+  } 
+  .m-no{background: radial-gradient(120% 120% at 20% 20%, #d4d7dd 0%, #9aa1ad 65%, #6c7482 100%); color:#0f1115}
   .toolbar{display:flex; gap:8px; align-items:center} .hidden{display:none!important}
   .editPanel{display:none; grid-template-columns: 1fr auto; gap:8px; align-items:center} .editing .editPanel{display:grid}
   .toggleEdit.btn.active{outline:2px solid #2a364b} .u-input{width:100%; background:#0f141f; border:1px solid #263045; color:var(--ink); border-radius:10px; padding:6px 8px}
@@ -157,9 +161,6 @@
       <div class="card">
         <label class="section">이름 검색</label>
         <input type="text" id="q" placeholder="예: 파베로스, 샤크론…" />
-        <div class="checks" style="margin-top:8px">
-          <label class="check"><input type="checkbox" id="onlySearchable" checked/> 검색 가능한 페트만</label>
-        </div>
       </div>
       <div class="card">
         <div class="row" style="grid-template-columns: 1fr;">
@@ -330,7 +331,6 @@ function getFilters() {
   if ($("#dual_low")) $("#dual_low").value = String(low);
   return {
     q: $("#q").value.trim(),
-    onlySearchable: $("#onlySearchable").checked,
     attrPick: $("#attrPick").value,
     dualHigh: high,
     dualLow: low,
@@ -348,11 +348,15 @@ function getFilters() {
 }
 
 function match(p, f) {
-  if (f.onlySearchable && !p.searchable) return false;
+  // ★ searchable 값이 false인 경우만 필터링 (속성이 없으면 기본 true 취급)
+  const searchable = (p.searchable !== false);
+  if (!searchable) return false;
+
   if (f.q) {
     const ql = f.q.toLowerCase();
     if (!(p.name||"").toLowerCase().includes(ql)) return false;
   }
+
   if (f.attrPick !== "전체") {
     if (f.attrPick === "듀얼") {
       if (!isDualExactSum10(p.attr, f.dualHigh)) return false;
@@ -361,13 +365,14 @@ function match(p, f) {
       if (!dom.includes(f.attrPick)) return false;
     }
   }
-  if (p.searchable) {
+  // grade 필터는 검색 가능한 애들에만 적용 (지금은 어차피 위에서 searchable 아닌 애는 걸러짐)
+  if (searchable) {
     if (!f.grades.includes(p.grade||"")) return false;
   }
+
   const mountState = p.mount ? "가능" : "불가";
   if (!f.mounts.includes(mountState)) return false;
 
-  // ★ 새 구조(s0/sg)를 우선 사용, 없으면 예전 init/grow도 허용
   const I = p.s0 || p.init || {};
   const G = p.sg || p.grow || {};
 
@@ -408,7 +413,14 @@ function attrOval(k, v, isDom){
   const span = document.createElement("span");
   const cls = { "지":"a-earth", "수":"a-water", "화":"a-fire", "풍":"a-wind" }[k] || "";
   span.className = "oval " + cls + (isDom ? " dom" : "");
-  span.textContent = (v==null ? "—" : v);
+
+  // ★ 0이거나 값이 없으면 숫자 표시는 숨김
+  if (v == null || v <= 0) {
+    span.textContent = "";
+  } else {
+    span.textContent = v;
+  }
+
   span.title = k;
   return span;
 }
@@ -487,7 +499,9 @@ function petCard(p) {
   name.className = "name";
   name.textContent = p.name || "—";
   r1.appendChild(name);
-  if (!p.searchable) {
+
+  // ★ searchable === false 인 경우만 배지 표시
+  if (p.searchable === false) {
     const b = document.createElement("span");
     b.className = "badge";
     b.textContent = "검색 불가";
@@ -607,7 +621,7 @@ function render() {
   const chips = $("#activeChips");
   chips.innerHTML = "";
   if (f.q) chips.appendChild(chip(`이름: "${f.q}"`, ()=>{ $("#q").value=""; render(); }));
-  if (f.onlySearchable) chips.appendChild(chip("검색 가능만", ()=>{ $("#onlySearchable").checked=false; render(); }));
+  //if (f.onlySearchable) chips.appendChild(chip("검색 가능만", ()=>{ $("#onlySearchable").checked=false; render(); }));
   if (f.attrPick!=="전체") {
     if (f.attrPick==="듀얼") chips.appendChild(chip(`듀얼 = ${f.dualHigh}/${f.dualLow}(합계10)`, ()=>{ $("#attrPick").value="전체"; render(); }));
     else chips.appendChild(chip(`주속성: ${f.attrPick}`, ()=>{ $("#attrPick").value="전체"; render(); }));
@@ -649,7 +663,7 @@ function bindFilterEvents() {
   // 이름 검색
   document.querySelector("#q")?.addEventListener("input", render);
   // 검색 가능만
-  document.querySelector("#onlySearchable")?.addEventListener("change", render);
+  //document.querySelector("#onlySearchable")?.addEventListener("change", render);
   // 주 속성 선택
   document.querySelector("#attrPick")?.addEventListener("change", render);
   // 등급 체크박스
