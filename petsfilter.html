@@ -94,7 +94,23 @@
   .toolbar{display:flex; gap:8px; align-items:center} .hidden{display:none!important}
   .editPanel{display:none; grid-template-columns: 1fr auto; gap:8px; align-items:center} .editing .editPanel{display:grid}
   .toggleEdit.btn.active{outline:2px solid #2a364b} .u-input{width:100%; background:#0f141f; border:1px solid #263045; color:var(--ink); border-radius:10px; padding:6px 8px}
-
+  .sortWrap{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-size:12px;
+    color:var(--muted);
+  }
+  #sortMode{
+    background:#101521;
+    border:1px solid #1c2433;
+    color:var(--ink);
+    border-radius:999px;
+    padding:4px 10px;
+    font-size:12px;
+    height:28px;
+  }
+  
   /* backBtn/adminLogin 통일 스타일 */
   .backBtn, .adminLogin{
     background:#111826; border:1px dashed #223049; color:#a7b0c0; border-radius:10px;
@@ -230,6 +246,17 @@
       <div class="card">
         <div class="row" style="grid-template-columns: auto 1fr auto; align-items:center">
           <div class="chips" id="activeChips"></div>
+                    <!-- ★ 정렬 셀렉트 -->
+          <div class="sortWrap">
+            <label for="sortMode" class="muted" style="font-size:11px; margin-right:4px;">정렬</label>
+            <select id="sortMode">
+              <option value="recommend">추천 순</option>
+              <option value="name">가나다 순</option>
+              <option value="grow_atk">성장 공격력 ↑</option>
+              <option value="grow_def">성장 방어력 ↑</option>
+              <option value="grow_agi">성장 순발력 ↑</option>
+            </select>
+          </div>
           <div class="spacer"></div>
           <div class="pill"><strong id="countShow">0</strong>&nbsp;/&nbsp;<span id="totalShow">0</span> 개</div>
         </div>
@@ -550,7 +577,50 @@ function petCard(p) {
 }
 
 /* ====== 문턱(최소치) 우선 정렬 ====== */
-function sortRows(rows, f) {
+function sortRows(rows, f, sortMode) {
+  const mode = sortMode || "recommend";
+
+  const getGrow = (p) => p.sg || p.grow || {};
+  const safeNum = (v) => (Number.isFinite(v) ? v : Infinity);
+
+  // === 1) 가나다 순 ===
+  if (mode === "name") {
+    return rows.slice().sort((a, b) =>
+      (a.name || "").localeCompare(b.name || "", "ko")
+    );
+  }
+
+  // === 2) 성장 공격력 오름차순 ===
+  if (mode === "grow_atk") {
+    return rows.slice().sort((a, b) => {
+      const ga = getGrow(a), gb = getGrow(b);
+      const va = safeNum(ga.atk), vb = safeNum(gb.atk);
+      if (va !== vb) return va - vb; // 오름차순
+      return (a.name || "").localeCompare(b.name || "", "ko");
+    });
+  }
+
+  // === 3) 성장 방어력 오름차순 ===
+  if (mode === "grow_def") {
+    return rows.slice().sort((a, b) => {
+      const ga = getGrow(a), gb = getGrow(b);
+      const va = safeNum(ga.def), vb = safeNum(gb.def);
+      if (va !== vb) return va - vb;
+      return (a.name || "").localeCompare(b.name || "", "ko");
+    });
+  }
+
+  // === 4) 성장 순발력 오름차순 ===
+  if (mode === "grow_agi") {
+    return rows.slice().sort((a, b) => {
+      const ga = getGrow(a), gb = getGrow(b);
+      const va = safeNum(ga.agi), vb = safeNum(gb.agi);
+      if (va !== vb) return va - vb;
+      return (a.name || "").localeCompare(b.name || "", "ko");
+    });
+  }
+
+  // === 5) 기본: 기존 "문턱 우선 + 주속성/이름" 추천 정렬 ===
   const anyMin =
     f.min_init_hp  > 0 || f.min_init_atk > 0 || f.min_init_def > 0 || f.min_init_agi > 0 ||
     f.min_grow_hp  > 0 || f.min_grow_atk > 0 || f.min_grow_def > 0 || f.min_grow_agi > 0;
@@ -560,7 +630,6 @@ function sortRows(rows, f) {
 
   if (anyMin) {
     return rows.slice().sort((a, b) => {
-      // ★ 여기서도 sg 우선, 없으면 grow
       const gA = a.sg || a.grow || {};
       const gB = b.sg || b.grow || {};
 
@@ -568,36 +637,39 @@ function sortRows(rows, f) {
       const dB_agi = delta(gB.agi, f.min_grow_agi || 0);
       if (dA_agi !== dB_agi) return dA_agi - dB_agi;
 
-      const dA_atk = delta(gA.atk, f.min_grow_atk || 0) - delta(gB.atk, f.min_grow_atk || 0);
-      if (dA_atk !== 0) return dA_atk;
+      const dA_atk = delta(gA.atk, f.min_grow_atk || 0);
+      const dB_atk = delta(gB.atk, f.min_grow_atk || 0);
+      if (dA_atk !== dB_atk) return dA_atk - dB_atk;
 
-      const dA_def = delta(gA.def, f.min_grow_def || 0) - delta(gB.def, f.min_grow_def || 0);
-      if (dA_def !== 0) return dA_def;
+      const dA_def = delta(gA.def, f.min_grow_def || 0);
+      const dB_def = delta(gB.def, f.min_grow_def || 0);
+      if (dA_def !== dB_def) return dA_def - dB_def;
 
-      const dA_hp  = delta(gA.hp,  f.min_grow_hp  || 0) - delta(gB.hp,  f.min_grow_hp  || 0);
-      if (dA_hp !== 0) return dA_hp;
+      const dA_hp  = delta(gA.hp,  f.min_grow_hp  || 0);
+      const dB_hp  = delta(gB.hp,  f.min_grow_hp  || 0);
+      if (dA_hp !== dB_hp) return dA_hp - dB_hp;
 
-      // 마지막 타이: (선택) 주 속성 강한 순 → 이름
       const key = f.attrPick;
       if (key && key !== "전체" && key !== "듀얼") {
         const getv = (p) => (p.attr && typeof p.attr[key] === "number") ? p.attr[key] : 0;
         const dv = getv(b) - getv(a); // 큰 값 우선
         if (dv !== 0) return dv;
       }
-      return (a.name || "").localeCompare(b.name || "");
+      return (a.name || "").localeCompare(b.name || "", "ko");
     });
   }
 
-  // 문턱이 없으면 기존 정렬(주 속성 강한 순) 유지
+  // 문턱이 없으면: 주 속성 강한 순 → 이름 (기존 로직)
   const key = f.attrPick;
   if (!key || key === "전체" || key === "듀얼") return rows;
   const getv = (p) => (p.attr && typeof p.attr[key] === "number") ? p.attr[key] : 0;
   return rows.slice().sort((a, b) => {
-    const dv = getv(b) - getv(a);
+    const dv = getv(b) - getv(a); // 강한 순
     if (dv !== 0) return dv;
-    return (a.name || "").localeCompare(b.name || "");
+    return (a.name || "").localeCompare(b.name || "", "ko");
   });
 }
+
 
 
 function ensureMountAtLeastOne(e) {
@@ -612,8 +684,10 @@ function ensureMountAtLeastOne(e) {
 
 function render() {
   const f = getFilters();
+  const sortMode = $("#sortMode")?.value || "recommend";
+
   let rows = PETS.filter(p => match(p, f));
-  rows = sortRows(rows, f);
+  rows = sortRows(rows, f, sortMode);
 
   $("#totalShow").textContent = PETS.length;
   $("#countShow").textContent = rows.length;
@@ -662,8 +736,8 @@ function render() {
 function bindFilterEvents() {
   // 이름 검색
   document.querySelector("#q")?.addEventListener("input", render);
-  // 검색 가능만
-  //document.querySelector("#onlySearchable")?.addEventListener("change", render);
+   // ★ 정렬 모드 변경
+  document.querySelector("#sortMode")?.addEventListener("change", render);
   // 주 속성 선택
   document.querySelector("#attrPick")?.addEventListener("change", render);
   // 등급 체크박스
@@ -727,8 +801,9 @@ function download(filename, text, mime="text/plain;charset=utf-8") {
 
 function currentFiltered() {
   const f = getFilters();
+  const sortMode = $("#sortMode")?.value || "recommend";
   let rows = PETS.filter(p => match(p, f));
-  rows = sortRows(rows, f);
+  rows = sortRows(rows, f, sortMode);
   return rows;
 }
 
