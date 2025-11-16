@@ -301,9 +301,9 @@
         <label for="sortMode" class="muted" style="font-size:11px; margin-right:4px;">정렬</label>
         <select id="sortMode">
           <option value="name">가나다 순</option>
-          <option value="grow_atk">성장 공격력 ↑</option>
-          <option value="grow_def">성장 방어력 ↑</option>
-          <option value="grow_agi">성장 순발력 ↑</option>
+          <option value="grow_atk">성장 공격력 ↓</option>
+          <option value="grow_def">성장 방어력 ↓</option>
+          <option value="grow_agi">성장 순발력 ↓</option>
         </select>
       </div>
     </div>
@@ -639,35 +639,36 @@ function sortRows(rows, f, sortMode) {
     );
   }
 
-  // === 2) 성장 공격력 오름차순 ===
+  // === 2) 성장 공격력 내림차순 ===
   if (mode === "grow_atk") {
     return rows.slice().sort((a, b) => {
       const ga = getGrow(a), gb = getGrow(b);
       const va = safeNum(ga.atk), vb = safeNum(gb.atk);
-      if (va !== vb) return va - vb; // 오름차순
+      if (va !== vb) return vb - va; // ⬅️ 내림차순
       return (a.name || "").localeCompare(b.name || "", "ko");
     });
   }
 
-  // === 3) 성장 방어력 오름차순 ===
+  // === 3) 성장 방어력 내림차순 ===
   if (mode === "grow_def") {
     return rows.slice().sort((a, b) => {
       const ga = getGrow(a), gb = getGrow(b);
       const va = safeNum(ga.def), vb = safeNum(gb.def);
-      if (va !== vb) return va - vb;
+      if (va !== vb) return vb - va; // ⬅️ 내림차순
       return (a.name || "").localeCompare(b.name || "", "ko");
     });
   }
 
-  // === 4) 성장 순발력 오름차순 ===
+  // === 4) 성장 순발력 내림차순 ===
   if (mode === "grow_agi") {
     return rows.slice().sort((a, b) => {
       const ga = getGrow(a), gb = getGrow(b);
       const va = safeNum(ga.agi), vb = safeNum(gb.agi);
-      if (va !== vb) return va - vb;
+      if (va !== vb) return vb - va; // ⬅️ 내림차순
       return (a.name || "").localeCompare(b.name || "", "ko");
     });
   }
+
 
   // === 5) 기본: 기존 "문턱 우선 + 주속성/이름" 추천 정렬 ===
   const anyMin =
