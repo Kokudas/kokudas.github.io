@@ -717,33 +717,33 @@ function renderPetList(){
     return;
   }
 
-  list.forEach(n=>{
-    const div=document.createElement('div'); div.className='item';
+list.forEach(n=>{
+  const div=document.createElement('div'); div.className='item';
 
-    const left=document.createElement('div'); left.textContent = n;
-    const right=document.createElement('div'); right.className="tags";
+  const left=document.createElement('div'); left.textContent = n;
+  const right=document.createElement('div'); right.className="tags";
 
-    /* ★ 즐겨찾기 별 배지 */
-    const star = document.createElement('span');
-    const favOn = isFav(n);
-    star.className = 'tag fav' + (favOn ? ' on' : '');
-    star.textContent = favOn ? '★' : '☆';
-    star.title = favOn ? '즐겨찾기 해제' : '즐겨찾기 추가';
-    star.setAttribute('role','button');
-    star.setAttribute('aria-pressed', favOn ? 'true' : 'false');
-    star.tabIndex = 0;
-    const toggle = (e)=>{ e.stopPropagation(); toggleFav(n); };
-    star.addEventListener('click', toggle);
-    star.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ toggle(e); }});
-    right.appendChild(star);
+  /* ★ 즐겨찾기 별 배지 */
+  const star = document.createElement('span');
+  const favOn = isFav(n);
+  star.className = 'tag fav' + (favOn ? ' on' : '');
+  star.textContent = favOn ? '★' : '☆';
+  star.title = favOn ? '즐겨찾기 해제' : '즐겨찾기 추가';
+  star.setAttribute('role','button');
+  star.setAttribute('aria-pressed', favOn ? 'true' : 'false');
+  star.tabIndex = 0;
+  const toggle = (e)=>{ e.stopPropagation(); toggleFav(n); };
+  star.addEventListener('click', toggle);
+  star.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ toggle(e); }});
 
-    // 8등급 보장 배지
-    const r8 = R8MAP[n];
-    if (r8 && (Array.isArray(r8.obs_100_rank8) ? r8.obs_100_rank8.length : (r8.length||0))) {
-      const sets = Array.isArray(r8.obs_100_rank8) ? r8.obs_100_rank8 : r8;
-      const tag2 = document.createElement('span');
-      tag2.className = 'tag rank8 tip';
-      tag2.textContent = '100%';
+  // 8등급 보장 배지
+  const r8 = R8MAP[n];
+  let rankBadge = null;
+  if (r8 && (Array.isArray(r8.obs_100_rank8) ? r8.obs_100_rank8.length : (r8.length||0))) {
+    const sets = Array.isArray(r8.obs_100_rank8) ? r8.obs_100_rank8 : r8;
+    rankBadge = document.createElement('span');
+    rankBadge.className = 'tag rank8 tip';
+    rankBadge.textContent = '100%';
 
       const maxShow = 20;
       const preview = sets.slice(0, maxShow).map(a=>`(${a[0]},${a[1]},${a[2]},${a[3]})`).join(' · ');
@@ -757,7 +757,8 @@ function renderPetList(){
       tag2.addEventListener('touchstart', stop, {passive:true});
       right.appendChild(tag2);
     }
-
+    if (rankBadge) right.appendChild(rankBadge);
+    right.appendChild(star);
     div.appendChild(left);
     div.appendChild(right);
     div.addEventListener('click', ()=>{
