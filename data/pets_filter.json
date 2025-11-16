@@ -2185,53 +2185,53 @@
   },
   {
     "name": "만모드",
-    "searchable": false,
-    "grade": null,
+    "searchable": true,
+    "grade": "일반",
     "attr": {
-      "지": 0,
+      "지": 10,
       "수": 0,
       "화": 0,
       "풍": 0
     },
     "s0": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 68.62,
+      "atk": 10.51,
+      "def": 12.98,
+      "agi": 2.12
     },
     "sg": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 11.94,
+      "atk": 1.83,
+      "def": 2.26,
+      "agi": 0.37
     },
-    "route": null,
+    "route": "가우린 섬 (동105, 남145) 포획",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/69a4a14b3f4c5839b7292aef0c8409f6_KY4phJ6j_f66a452eb961b9a04130697f32f1c3e89f8dff36.gif"
   },
   {
     "name": "푸모나스",
-    "searchable": false,
-    "grade": null,
+    "searchable": true,
+    "grade": "일반",
     "attr": {
-      "지": 0,
-      "수": 0,
+      "지": 2,
+      "수": 8,
       "화": 0,
       "풍": 0
     },
     "s0": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 77.62,
+      "atk": 10.19,
+      "def": 12.44,
+      "agi": 2.38
     },
     "sg": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 13.51,
+      "atk": 1.77,
+      "def": 2.17,
+      "agi": 0.41
     },
-    "route": null,
+    "route": "가우린 섬 (동133, 남47) 포획",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/69a4a14b3f4c5839b7292aef0c8409f6_ZCmAuLBK_01f3e7d2783557323a80098b8209af36b295ad6a.gif"
   },
@@ -2341,79 +2341,79 @@
   },
   {
     "name": "노보스",
-    "searchable": false,
-    "grade": null,
+    "searchable": true,
+    "grade": "일반",
     "attr": {
       "지": 0,
       "수": 0,
-      "화": 0,
-      "풍": 0
+      "화": 3,
+      "풍": 7
     },
     "s0": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 51.1,
+      "atk": 9.44,
+      "def": 9.26,
+      "agi": 3.5
     },
     "sg": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 11.11,
+      "atk": 2.05,
+      "def": 2.01,
+      "agi": 0.76
     },
-    "route": null,
+    "route": "벽청의 동굴(나) 8층 (동19, 남13) 포획",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/69a4a14b3f4c5839b7292aef0c8409f6_G86ZDPeg_b06b558d6c78d265e35991f0dc8f9e1471e603d7.gif"
   },
   {
     "name": "루보스",
-    "searchable": false,
-    "grade": null,
+    "searchable": true,
+    "grade": "일반",
     "attr": {
-      "지": 0,
-      "수": 0,
+      "지": 7,
+      "수": 3,
       "화": 0,
       "풍": 0
     },
     "s0": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 53.5,
+      "atk": 9.14,
+      "def": 10.04,
+      "agi": 2.3
     },
     "sg": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 11.64,
+      "atk": 1.99,
+      "def": 2.18,
+      "agi": 0.5
     },
-    "route": null,
+    "route": "쿠르의 해저통로 (동47, 남32) 포획",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/69a4a14b3f4c5839b7292aef0c8409f6_Gz0ZK278_ea9d93f2cc6d0a6d88551ecd1af506a44c806ab0.gif"
   },
   {
     "name": "가이",
-    "searchable": false,
-    "grade": null,
+    "searchable": true,
+    "grade": "일반",
     "attr": {
       "지": 0,
-      "수": 0,
-      "화": 0,
+      "수": 7,
+      "화": 3,
       "풍": 0
     },
     "s0": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 57.7,
+      "atk": 9.36,
+      "def": 9.19,
+      "agi": 2.5
     },
     "sg": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 12.55,
+      "atk": 2.04,
+      "def": 2.0,
+      "agi": 0.54
     },
-    "route": null,
+    "route": "쟈루 섬 (동 141, 남797) 포획",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/69a4a14b3f4c5839b7292aef0c8409f6_KPRViCqa_ca8b6a07f5747d4f9e1bb2b272503dc35e41c5fa.gif"
   },
@@ -2445,27 +2445,27 @@
   },
   {
     "name": "돌가로스",
-    "searchable": false,
-    "grade": null,
+    "searchable": true,
+    "grade": "일반",
     "attr": {
-      "지": 0,
+      "지": 10,
       "수": 0,
       "화": 0,
       "풍": 0
     },
     "s0": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 59.93,
+      "atk": 11.06,
+      "def": 11.76,
+      "agi": 3.25
     },
     "sg": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 10.95,
+      "atk": 2.02,
+      "def": 2.15,
+      "agi": 0.59
     },
-    "route": null,
+    "route": "아스마르 광산 6층 (동6, 남6) 포획",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/69a4a14b3f4c5839b7292aef0c8409f6_zZRWcF45_12df3ac588876b45feb562fe96b41efc12145a9b.gif"
   },
@@ -2731,27 +2731,27 @@
   },
   {
     "name": "타노프스",
-    "searchable": false,
-    "grade": null,
+    "searchable": true,
+    "grade": "일반",
     "attr": {
-      "지": 0,
-      "수": 0,
+      "지": 2,
+      "수": 8,
       "화": 0,
       "풍": 0
     },
     "s0": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 38.01,
+      "atk": 5.6,
+      "def": 6.98,
+      "agi": 1.89
     },
     "sg": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 11.81,
+      "atk": 1.74,
+      "def": 2.17,
+      "agi": 0.59
     },
-    "route": null,
+    "route": "쟈루 섬 (동485, 남165) 포획",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/69a4a14b3f4c5839b7292aef0c8409f6_DpLI05Ye_d843f08db4b5a1589f507f3d79c6a19bb7dd3a27.gif"
   },
@@ -3043,27 +3043,27 @@
   },
   {
     "name": "노라돈",
-    "searchable": false,
-    "grade": null,
+    "searchable": true,
+    "grade": "일반",
     "attr": {
       "지": 0,
       "수": 0,
-      "화": 0,
-      "풍": 0
+      "화": 2,
+      "풍": 8
     },
     "s0": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 52.2,
+      "atk": 11.12,
+      "def": 7.66,
+      "agi": 5.88
     },
     "sg": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 10.33,
+      "atk": 2.2,
+      "def": 1.52,
+      "agi": 1.16
     },
-    "route": null,
+    "route": "가우린 섬 (동237, 남80) 포획",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/69a4a14b3f4c5839b7292aef0c8409f6_prMt9miC_5d6b31297fb327dead5a10b86b2ad003c17f2d79.gif"
   },
@@ -3407,28 +3407,28 @@
   },
   {
     "name": "기라노",
-    "searchable": false,
-    "grade": null,
+    "searchable": true,
+    "grade": "일반",
     "attr": {
       "지": 0,
-      "수": 0,
-      "화": 0,
+      "수": 2,
+      "화": 8,
       "풍": 0
     },
     "s0": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 63.31,
+      "atk": 14.24,
+      "def": 8.39,
+      "agi": 7.15
     },
     "sg": {
-      "hp": null,
-      "atk": null,
-      "def": null,
-      "agi": null
+      "hp": 10.59,
+      "atk": 2.38,
+      "def": 1.4,
+      "agi": 1.2
     },
-    "route": null,
-    "mount": false,
+    "route": "가우린 섬 (동441, 남104) 포획",
+    "mount": true,
     "img": "https://stoneage001.com/data/file/board23/69a4a14b3f4c5839b7292aef0c8409f6_e7hW5GwZ_e5564be8f2a5ab595986da37ef6ddb63272b9638.gif"
   },
   {
@@ -8370,5 +8370,187 @@
     "route": "유리의 동굴 13층 (동29,남19) 포획",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_IZ3KdXCv_9e1fbc047835fd3956bde2d7262337906adcf193.gif"
+  },
+  {
+    "name": "아르마루",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 5,
+      "수": 5,
+      "화": 0,
+      "풍": 0
+    },
+    "s0": {
+      "hp": 57.12,
+      "atk": 12.67,
+      "def": 8.17,
+      "agi": 7.88
+    },
+    "sg": {
+      "hp": 9.94,
+      "atk": 2.2,
+      "def": 1.42,
+      "agi": 1.37
+    },
+    "route": "분노의 방 전역 포획",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_qbfxWlE2_43f7cc679bf80bcb9594f1f2a80d5033e8ac66c8.gif"
+  },
+    {
+    "name": "우라노스",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 7,
+      "수": 0,
+      "화": 0,
+      "풍": 3
+    },
+    "s0": {
+      "hp": 50.35,
+      "atk": 10.86,
+      "def": 6.24,
+      "agi": 8.23
+    },
+    "sg": {
+      "hp": 9.98,
+      "atk": 2.15,
+      "def": 1.24,
+      "agi": 1.63
+    },
+    "route": "질투의 방 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_viT2F1So_3344a90806dd1455fbe3a12146bae605ae1baf53.gif"
+  },
+    {
+    "name": "그램고르",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 4,
+      "수": 6,
+      "화": 0,
+      "풍": 0
+    },
+    "s0": {
+      "hp": 57.96,
+      "atk": 9.95,
+      "def": 10.17,
+      "agi": 1.8
+    },
+    "sg": {
+      "hp": 11.95,
+      "atk": 2.05,
+      "def": 2.1,
+      "agi": 0.37
+    },
+    "route": "그램고르의 방 전역 포획",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_4OwHAi6B_6ec4b82934102f3b1a05e158e5038723a9c204cc.gif"
+  },
+    {
+    "name": "흑룡",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 5,
+      "수": 0,
+      "화": 0,
+      "풍": 5
+    },
+    "s0": {
+      "hp": 56.12,
+      "atk": 11.83,
+      "def": 6.66,
+      "agi": 9.12
+    },
+    "sg": {
+      "hp": 10.21,
+      "atk": 2.15,
+      "def": 1.21,
+      "agi": 1.66
+    },
+    "route": "나태의 방 (흑룡) 레이드 랜덤 보상",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_9djFYVDm_cb8758362fb43058c1deba63b22e9fa3fe440ab6.gif"
+  },
+    {
+    "name": "바우트",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 1,
+      "화": 9,
+      "풍": 0
+    },
+    "s0": {
+      "hp": 67.38,
+      "atk": 13.09,
+      "def": 12.42,
+      "agi": 1.88
+    },
+    "sg": {
+      "hp": 11.72,
+      "atk": 2.28,
+      "def": 2.16,
+      "agi": 0.33
+    },
+    "route": "지원/마일리지 포인트 상점",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_EFLbyWO8_8482c40fc34d474c24eef52a23abcf6d7041d0bd.gif"
+  },
+    {
+    "name": "토우트",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 2,
+      "수": 8,
+      "화": 0,
+      "풍": 0
+    },
+    "s0": {
+      "hp": 74.62,
+      "atk": 11.84,
+      "def": 12.74,
+      "agi": 2.38
+    },
+    "sg": {
+      "hp": 12.98,
+      "atk": 2.06,
+      "def": 2.22,
+      "agi": 0.41
+    },
+    "route": "지원/마일리지 포인트 상점",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_74oed5SI_b4f00ccf47921dee7ed656d1e83138ed511a9db4.gif"
+  },
+    {
+    "name": "아리",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 0,
+      "화": 1,
+      "풍": 9
+    },
+    "s0": {
+      "hp": 53.4,
+      "atk": 10.69,
+      "def": 6.15,
+      "agi": 11.16
+    },
+    "sg": {
+      "hp": 9.68,
+      "atk": 1.94,
+      "def": 1.11,
+      "agi": 2.02
+    },
+    "route": "지원/마일리지 포인트 상점",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_P0Bv7VXS_4b6625b6a08a5e748651c73595c105266d40cb3c.gif"
   }
 ]
