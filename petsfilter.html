@@ -367,7 +367,10 @@ function match(p, f) {
   const mountState = p.mount ? "가능" : "불가";
   if (!f.mounts.includes(mountState)) return false;
 
-  const I = p.init||{}, G = p.grow||{};
+  // ★ 새 구조(s0/sg)를 우선 사용, 없으면 예전 init/grow도 허용
+  const I = p.s0 || p.init || {};
+  const G = p.sg || p.grow || {};
+
   if (I.hp==null && f.min_init_hp>0) return false;
   if (I.atk==null && f.min_init_atk>0) return false;
   if (I.def==null && f.min_init_def>0) return false;
@@ -458,7 +461,9 @@ function makeEditPanel(p){
 
 function petCard(p) {
   const dom = dominantAttrs(p.attr);
-  const init = p.init||{}, grow = p.grow||{};
+  // ★ 새 키 사용, 없으면 init/grow도 허용
+  const init = p.s0 || p.init || {};
+  const grow = p.sg || p.grow || {};
 
   const card = document.createElement("div");
   card.className = "resultCard" + ((EDIT_MODE && ADMIN) ? " editing" : "");
@@ -532,7 +537,6 @@ function petCard(p) {
 
 /* ====== 문턱(최소치) 우선 정렬 ====== */
 function sortRows(rows, f) {
-  // 문턱(최소치) 하나라도 켜져 있으면 문턱-근접도 정렬 사용
   const anyMin =
     f.min_init_hp  > 0 || f.min_init_atk > 0 || f.min_init_def > 0 || f.min_init_agi > 0 ||
     f.min_grow_hp  > 0 || f.min_grow_atk > 0 || f.min_grow_def > 0 || f.min_grow_agi > 0;
@@ -541,20 +545,22 @@ function sortRows(rows, f) {
     (Number.isFinite(v) && Number.isFinite(thr)) ? Math.max(0, v - thr) : Number.POSITIVE_INFINITY;
 
   if (anyMin) {
-    // ✅ 1순위 키: 성장 순발력(AGI) 문턱에 얼마나 "가까운지" (작을수록 위)
     return rows.slice().sort((a, b) => {
-      const dA_agi = delta(a.grow?.agi, f.min_grow_agi || 0);
-      const dB_agi = delta(b.grow?.agi, f.min_grow_agi || 0);
+      // ★ 여기서도 sg 우선, 없으면 grow
+      const gA = a.sg || a.grow || {};
+      const gB = b.sg || b.grow || {};
+
+      const dA_agi = delta(gA.agi, f.min_grow_agi || 0);
+      const dB_agi = delta(gB.agi, f.min_grow_agi || 0);
       if (dA_agi !== dB_agi) return dA_agi - dB_agi;
 
-      // 2순위(가벼운 타이브레이커): 성장 공격력 → 방어 → 내구 근접도
-      const dA_atk = delta(a.grow?.atk, f.min_grow_atk || 0) - delta(b.grow?.atk, f.min_grow_atk || 0);
+      const dA_atk = delta(gA.atk, f.min_grow_atk || 0) - delta(gB.atk, f.min_grow_atk || 0);
       if (dA_atk !== 0) return dA_atk;
 
-      const dA_def = delta(a.grow?.def, f.min_grow_def || 0) - delta(b.grow?.def, f.min_grow_def || 0);
+      const dA_def = delta(gA.def, f.min_grow_def || 0) - delta(gB.def, f.min_grow_def || 0);
       if (dA_def !== 0) return dA_def;
 
-      const dA_hp  = delta(a.grow?.hp,  f.min_grow_hp  || 0) - delta(b.grow?.hp,  f.min_grow_hp  || 0);
+      const dA_hp  = delta(gA.hp,  f.min_grow_hp  || 0) - delta(gB.hp,  f.min_grow_hp  || 0);
       if (dA_hp !== 0) return dA_hp;
 
       // 마지막 타이: (선택) 주 속성 강한 순 → 이름
@@ -666,7 +672,11 @@ function bindFilterEvents() {
 }
 
 function toCSV(rows) {
-  const headers = ["name","searchable","grade","attr_지","attr_수","attr_화","attr_풍","dom_attr","init_hp","init_atk","init_def","init_agi","grow_hp","grow_atk","grow_def","grow_agi","route","mount","img"];
+  const headers = ["name","searchable","grade","attr_지","attr_수","attr_화","attr_풍","dom_attr",
+    "init_hp","init_atk","init_def","init_agi",
+    "grow_hp","grow_atk","grow_def","grow_agi",
+    "route","mount","img"
+  ];
   const esc = (v) => {
     if (v==null) return "";
     const s = String(v).replace(/"/g,'""');
@@ -675,14 +685,16 @@ function toCSV(rows) {
   const lines = [headers.join(",")];
   rows.forEach(p=>{
     const dom = dominantAttrs(p.attr);
+    const s0 = p.s0 || p.init || {};
+    const sg = p.sg || p.grow || {};
     lines.push([
       p.name,
       p.searchable,
       p.grade||"",
       p.attr?.지||0, p.attr?.수||0, p.attr?.화||0, p.attr?.풍||0,
       dom.join("/"),
-      p.init?.hp??"", p.init?.atk??"", p.init?.def??"", p.init?.agi??"",
-      p.grow?.hp??"", p.grow?.atk??"", p.grow?.def??"", p.grow?.agi??"",
+      s0.hp ?? "", s0.atk ?? "", s0.def ?? "", s0.agi ?? "",
+      sg.hp ?? "", sg.atk ?? "", sg.def ?? "", sg.agi ?? "",
       p.route||"",
       p.mount ? "1":"0",
       p.img||""
