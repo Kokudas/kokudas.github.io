@@ -1016,8 +1016,9 @@ function colorByTries(x){
        : (x<=20) ? getCSS('--warn')
        :           getCSS('--bad');
 }
+  let currTries = 1;
 const { setFrac: _trSetFrac } = makeRing(trFill, null, ()=> colorByTries(currTries));
-let currTries = 1;
+
 
 function setTries(t){
   const num = Number(t);
