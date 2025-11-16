@@ -782,6 +782,7 @@ $("btnNew").addEventListener("click", ()=>{
   sortNames(); renderList(); loadForm(name);
 });
 searchEl.addEventListener("input", renderList);
+$("btnDecCalc").addEventListener("click", renderDecimalsPanel);
 
 $("btnSolve").addEventListener("click", ()=>{
   const f = gatherForm();
