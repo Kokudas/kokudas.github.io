@@ -688,7 +688,15 @@ function renderDecimalsPanel(){
   const S0atk  = S0real.atk.toNumber();
   const S0def  = S0real.def.toNumber();
   const S0agi  = S0real.agi.toNumber();
+  // ★ 추가: 소숫점 S0를 입력칸에 자동 반영
+  $("s0_hp").value  = S0hp.toFixed(2);
+  $("s0_atk").value = S0atk.toFixed(2);
+  $("s0_def").value = S0def.toFixed(2);
+  $("s0_agi").value = S0agi.toFixed(2);
 
+  // S0이 바뀌었으니 일관성 검사 다시 실행
+  updateConsistency();
+  
   const S0floor = {
     hp: Math.floor(S0hp),
     atk: Math.floor(S0atk),
