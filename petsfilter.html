@@ -300,7 +300,6 @@
       <div class="filter-right sortWrap">
         <label for="sortMode" class="muted" style="font-size:11px; margin-right:4px;">정렬</label>
         <select id="sortMode">
-          <option value="recommend">추천 순</option>
           <option value="name">가나다 순</option>
           <option value="grow_atk">성장 공격력 ↑</option>
           <option value="grow_def">성장 방어력 ↑</option>
@@ -628,7 +627,7 @@ function petCard(p) {
 
 /* ====== 문턱(최소치) 우선 정렬 ====== */
 function sortRows(rows, f, sortMode) {
-  const mode = sortMode || "recommend";
+  const mode = sortMode || "name";
 
   const getGrow = (p) => p.sg || p.grow || {};
   const safeNum = (v) => (Number.isFinite(v) ? v : Infinity);
@@ -734,7 +733,7 @@ function ensureMountAtLeastOne(e) {
 
 function render() {
   const f = getFilters();
-  const sortMode = $("#sortMode")?.value || "recommend";
+  const sortMode = $("#sortMode")?.value || "name";
 
   let rows = PETS.filter(p => match(p, f));
   rows = sortRows(rows, f, sortMode);
@@ -851,7 +850,7 @@ function download(filename, text, mime="text/plain;charset=utf-8") {
 
 function currentFiltered() {
   const f = getFilters();
-  const sortMode = $("#sortMode")?.value || "recommend";
+  const sortMode = $("#sortMode")?.value || "name";
   let rows = PETS.filter(p => match(p, f));
   rows = sortRows(rows, f, sortMode);
   return rows;
