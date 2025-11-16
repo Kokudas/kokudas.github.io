@@ -850,17 +850,23 @@ function makeRing(fillEl, maskStrokeEl, colorGetter){
   function apply(frac){
     const f = clamp01(frac);
 
-    if (f === 0){
-      // 완전히 비운 상태
-      fillEl.setAttribute('stroke-dasharray','0 1');
-      fillEl.setAttribute('stroke-dashoffset','0');
-      if (maskStrokeEl){
-        maskStrokeEl.setAttribute('stroke-dasharray','0 1');
-        maskStrokeEl.setAttribute('stroke-dashoffset','0');
-      }
-      fillEl.style.stroke = 'none';
-      return;
-    }
+if (f === 0){
+  // 길이 0짜리 대시로만 숨기기 (색은 그대로 유지)
+  const dash = C;
+  const gap  = C;
+
+  fillEl.setAttribute('stroke-dasharray', `0 ${gap}`);
+  fillEl.setAttribute('stroke-dashoffset', `${dash}`);
+
+  if (maskStrokeEl){
+    maskStrokeEl.setAttribute('stroke-dasharray', `0 ${gap}`);
+    maskStrokeEl.setAttribute('stroke-dashoffset', `${dash}`);
+  }
+
+  const col = colorGetter ? (colorGetter() || baseStroke) : baseStroke;
+  fillEl.style.stroke = col;   // ← stroke 를 없애지 말고 유지
+  return;
+}
 
     const dash = C;
     const gap  = C;
