@@ -607,7 +607,8 @@ const kpiSuccess = document.getElementById('kpiSuccess');
 const kpiAppear  = document.getElementById('kpiAppear');
 const kpiTries   = document.getElementById('kpiTries');
 const distBox = document.getElementById('dist');
-
+const totMatches   = document.getElementById('totMatches');
+const rank8Matches = document.getElementById('rank8Matches');
 const btnCalc = document.getElementById('btnCalc');
 const btnReset= document.getElementById('btnReset');
 const btnClear= document.getElementById('btnClear');
@@ -745,20 +746,20 @@ list.forEach(n=>{
     rankBadge.className = 'tag rank8 tip';
     rankBadge.textContent = '100%';
 
-      const maxShow = 20;
-      const preview = sets.slice(0, maxShow).map(a=>`(${a[0]},${a[1]},${a[2]},${a[3]})`).join(' · ');
-      const more = sets.length>maxShow ? ` 외 ${sets.length-maxShow}세트` : '';
-      const tipText = `8등급 보장 초기치\n${preview}${more}`;
-      tag2.setAttribute('data-tip', tipText);
+    const maxShow = 20;
+    const preview = sets.slice(0, maxShow)
+                        .map(a=>`(${a[0]},${a[1]},${a[2]},${a[3]})`).join(' · ');
+    const more    = sets.length>maxShow ? ` 외 ${sets.length-maxShow}세트` : '';
+    const tipText = `8등급 보장 초기치\n${preview}${more}`;
+    rankBadge.setAttribute('data-tip', tipText);
 
-      tag2.tabIndex = 0;
-      const stop = (e)=>{ e.stopPropagation(); };
-      tag2.addEventListener('click', stop);
-      tag2.addEventListener('touchstart', stop, {passive:true});
-      right.appendChild(tag2);
-    }
-    if (rankBadge) right.appendChild(rankBadge);
-    right.appendChild(star);
+    rankBadge.tabIndex = 0;
+    const stop = (e)=>{ e.stopPropagation(); };
+    rankBadge.addEventListener('click', stop);
+    rankBadge.addEventListener('touchstart', stop, {passive:true});
+  }
+  if (rankBadge) right.appendChild(rankBadge);
+  right.appendChild(star);
     div.appendChild(left);
     div.appendChild(right);
     div.addEventListener('click', ()=>{
