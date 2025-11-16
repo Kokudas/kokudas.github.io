@@ -30,6 +30,16 @@
   .btn.primary{background:linear-gradient(180deg,#2b71ff,#1d56cc);border-color:transparent;color:white}
   .btn.ghost{background:transparent}
   .btn.warn{border-color:#7a1e2e;background:#2a0f16;color:#ff8aa0}
+  .btn-sm{
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+.filter-btn.active{
+  background:#142033;
+  color:#cfe1ff;
+  border-color:#334055;
+}
   .list{max-height:52vh;overflow:auto;border:1px solid #2a3040;border-radius:10px}
   .item{padding:10px 12px;border-bottom:1px solid #222836;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer}
   .item:hover{background:#141924}
@@ -95,6 +105,8 @@
     background:#142033; color:#cfe1ff; font-weight:600; cursor:pointer
   }
   #gate .err{margin-top:8px; color:#ff7e92; font-size:13px; min-height:18px}
+
+  
 </style>
 </head>
 <body class="locked">
@@ -124,6 +136,12 @@
 
 <div class="grid">
   <section class="card">
+      <div class="row" style="margin-bottom:8px; gap:6px;" id="filterChips">
+      <label style="margin:0; align-self:center; font-size:13px; color:var(--muted);">필터:</label>
+      <button class="btn ghost btn-sm filter-btn active" data-filter="all">전체</button>
+      <button class="btn ghost btn-sm filter-btn" data-filter="no_s0sg">S0/SG 미완</button>
+      <button class="btn ghost btn-sm filter-btn" data-filter="no_ku">k/u 미완</button>
+    </div>
     <div class="row" style="margin-bottom:8px">
       <input id="search" placeholder="이름 검색" />
       <button class="btn" id="btnNew">+ 새 페트</button>
@@ -216,6 +234,13 @@
 
   <section class="card">
     <h3 style="margin:4px 0 10px">④ 환각(8등급) 100% 초기치 집계 & 커밋</h3>
+        <div class="row" style="margin-bottom:8px; gap:6px;" id="r8FilterChips">
+      <label style="margin:0; align-self:center; font-size:13px; color:var(--muted);">필터:</label>
+      <button class="btn ghost btn-sm filter-btn active" data-filter="all">전체</button>
+      <button class="btn ghost btn-sm filter-btn" data-filter="todo_r8">R8 작업</button>
+      <button class="btn ghost btn-sm filter-btn" data-filter="has_r8">R8 있음</button>
+      <button class="btn ghost btn-sm filter-btn" data-filter="no_ku">k/u 없음</button>
+    </div>
     <div class="row" style="align-items:center;margin-bottom:8px">
       <button class="btn" id="btnR8SelectAll">모두 선택</button>
       <button class="btn ghost" id="btnR8ClearAll">선택 해제</button>
@@ -292,7 +317,11 @@ const LS_KEY = "adminPetsCache_v2";
 
 /* ====== 상태 ====== */
 let DB = {}; let ORDER = []; let CURRENT = null;
+let currentFilter = 'all';       // ★ 신규: 좌측 페트 필터 상태
+let currentR8Filter = 'all';     // ★ 신규: R8 필터 상태
+let R8_DB = {};                  // ★ 신규: guaranteed_rank8.full.json 내용
 let R8_RESULT = {}; let R8_REMOTE_SHA = null;
+
 
 /* ====== 유틸 ====== */
 function fetchJSON(url){
@@ -458,30 +487,60 @@ const listEl = $("list"), searchEl = $("search");
 
 function renderList(){
   const kw = (searchEl.value||"").trim();
-  const show = ORDER.filter(n => kw ? n.includes(kw) : true);
+
+  // 1) 필터 조건에 따라 ORDER를 1차 필터링
+  const filteredOrder = ORDER.filter(n => {
+    const row = DB[n] || {};
+
+    if (currentFilter === 'no_s0sg') {
+      const s0ok = row.s0 && Number.isFinite(row.s0.hp) && Number.isFinite(row.s0.atk) && Number.isFinite(row.s0.def) && Number.isFinite(row.s0.agi);
+      const sgok = row.sg && Number.isFinite(row.sg.hp) && Number.isFinite(row.sg.atk) && Number.isFinite(row.sg.def) && Number.isFinite(row.sg.agi);
+      return !s0ok || !sgok;           // S0/SG 둘 중 하나라도 부족하면 포함
+    }
+
+    if (currentFilter === 'no_ku') {
+      // k/u 정보가 없는 경우만 포함
+      return !(row?.ku_override || (Number.isFinite(row?.k) && row?.u));
+    }
+
+    return true; // 'all'
+  });
+
+  // 2) 검색어로 2차 필터링
+  const show = filteredOrder.filter(n => kw ? n.includes(kw) : true);
+
   listEl.innerHTML = "";
   if(show.length===0){
     const d = document.createElement('div'); d.className="item"; d.textContent="결과 없음";
     listEl.appendChild(d); return;
   }
+
   for(const n of show){
     const row = DB[n]||{};
     const it = document.createElement('div'); it.className="item";
     const left = document.createElement('div'); left.textContent = n;
     const right = document.createElement('div'); right.className="tags";
+
+    const s0ok = row.s0 && Number.isFinite(row.s0.hp) && Number.isFinite(row.s0.atk) && Number.isFinite(row.s0.def) && Number.isFinite(row.s0.agi);
+    const sgok = row.sg && Number.isFinite(row.sg.hp) && Number.isFinite(row.sg.atk) && Number.isFinite(row.sg.def) && Number.isFinite(row.sg.agi);
+    const s0sg_ok = s0ok && sgok;
+
     const t1 = document.createElement('span');
-    t1.className = "tag " + (row?.s0 && row?.sg ? "ok" : "warn");
-    t1.textContent = row?.s0 && row?.sg ? "S0/SG" : "미완";
+    t1.className = "tag " + (s0sg_ok ? "ok" : "warn");
+    t1.textContent = s0sg_ok ? "S0/SG" : "미완";
     right.appendChild(t1);
+
     if(row?.ku_override || (Number.isFinite(row?.k) && row?.u)){
       const t2 = document.createElement('span'); t2.className="tag warn"; t2.textContent="k/u";
       right.appendChild(t2);
     }
+
     it.appendChild(left); it.appendChild(right);
     it.addEventListener('click', ()=>loadForm(n));
     listEl.appendChild(it);
   }
 }
+
 
 function loadForm(name){
   CURRENT = name;
@@ -791,7 +850,23 @@ $("btnNew").addEventListener("click", ()=>{
 });
 searchEl.addEventListener("input", renderList);
 $("btnDecCalc").addEventListener("click", renderDecimalsPanel);
+// ★ 신규: 좌측 페트 필터 버튼
+document.getElementById("filterChips").addEventListener("click", (e) => {
+  const btn = e.target.closest(".filter-btn");
+  if (!btn) return;
 
+  const filter = btn.dataset.filter;
+  if (filter === currentFilter) return;
+  currentFilter = filter;
+
+  document.querySelectorAll("#filterChips .filter-btn").forEach(b => {
+    b.classList.remove("active");
+  });
+  btn.classList.add("active");
+
+  renderList();
+});
+  
 $("btnSolve").addEventListener("click", ()=>{
   const f = gatherForm();
   if(!f || !f.name){ alert("이름을 입력하세요."); return; }
@@ -903,9 +978,38 @@ async function commitPets(){
 function renderR8List(){
   const box = $("r8List");
   box.innerHTML = "";
-  ORDER.forEach(n=>{
+
+  const filteredOrder = ORDER.filter(n => {
+    const r = DB[n] || {};
+    const hasKU = Number.isFinite(r?.k) && r?.u && [r.u.hp,r.u.atk,r.u.def,r.u.agi].every(Number.isFinite);
+
+    const r8Entry = R8_DB[n];
+    const hasR8 = r8Entry && (
+      (Array.isArray(r8Entry) && r8Entry.length > 0) ||
+      (r8Entry.obs_100_rank8 && r8Entry.obs_100_rank8.length > 0)
+    );
+
+    if (currentR8Filter === 'todo_r8') {     // k/u는 있는데 R8 데이터 없는 것만
+      return hasKU && !hasR8;
+    }
+    if (currentR8Filter === 'has_r8') {      // R8 이미 있는 것만
+      return hasR8;
+    }
+    if (currentR8Filter === 'no_ku') {       // k/u 없는 것만
+      return !hasKU;
+    }
+    return true;                             // all
+  });
+
+  filteredOrder.forEach(n=>{
     const r = DB[n]||{};
     const hasKU = Number.isFinite(r?.k) && r?.u && [r.u.hp,r.u.atk,r.u.def,r.u.agi].every(Number.isFinite);
+
+    const r8Entry = R8_DB[n];
+    const hasR8 = r8Entry && (
+      (Array.isArray(r8Entry) && r8Entry.length > 0) ||
+      (r8Entry.obs_100_rank8 && r8Entry.obs_100_rank8.length > 0)
+    );
 
     const lab = document.createElement('label');
     lab.className = "r8item" + (hasKU ? "" : " disabled");
@@ -914,18 +1018,54 @@ function renderR8List(){
     cb.type = "checkbox"; cb.value = n; cb.disabled = !hasKU;
     lab.appendChild(cb);
 
-    const nameSpan = document.createElement('span'); nameSpan.className = "name"; nameSpan.textContent = n;
+    const nameSpan = document.createElement('span');
+    nameSpan.className = "name";
+    nameSpan.textContent = n;
     lab.appendChild(nameSpan);
 
-    const extra = document.createElement('span'); extra.className = "extra";
-    if(r?.ku_override){ const tag = document.createElement('span'); tag.className="tag warn"; tag.textContent="override"; extra.appendChild(tag); }
-    if(!hasKU){ const tag = document.createElement('span'); tag.className="tag"; tag.textContent="k/u 없음"; extra.appendChild(tag); }
-    lab.appendChild(extra);
+    const extra = document.createElement('span');
+    extra.className = "extra";
 
+    if(hasR8){
+      const tag = document.createElement('span');
+      tag.className="tag ok";
+      tag.textContent="R8 있음";
+      extra.appendChild(tag);
+    }
+    if(r?.ku_override){
+      const tag = document.createElement('span');
+      tag.className="tag warn";
+      tag.textContent="override";
+      extra.appendChild(tag);
+    }
+    if(!hasKU){
+      const tag = document.createElement('span');
+      tag.className="tag";
+      tag.textContent="k/u 없음";
+      extra.appendChild(tag);
+    }
+
+    lab.appendChild(extra);
     box.appendChild(lab);
   });
 }
 
+// ★ 신규: R8 필터 버튼
+document.getElementById("r8FilterChips").addEventListener("click", (e) => {
+  const btn = e.target.closest(".filter-btn");
+  if (!btn) return;
+
+  const filter = btn.dataset.filter;
+  if (filter === currentR8Filter) return;
+  currentR8Filter = filter;
+
+  document.querySelectorAll("#r8FilterChips .filter-btn").forEach(b => {
+    b.classList.remove("active");
+  });
+  btn.classList.add("active");
+
+  renderR8List();
+});
 $("btnR8SelectAll").addEventListener("click", ()=>{
   document.querySelectorAll("#r8List input[type=checkbox]:not(:disabled)").forEach(cb=>cb.checked=true);
 });
@@ -1020,6 +1160,9 @@ $("btnR8Commit").addEventListener("click", async ()=>{
     return;
   }
   alert("guaranteed_rank8.full.json 커밋 성공!");
+  // ★ 신규: 로컬 R8_DB 갱신 후 목록 다시 렌더
+  R8_DB = out;
+  renderR8List();
 });
 
 /* ====== 데이터 로드 ====== */
@@ -1039,12 +1182,28 @@ async function loadRemote(){
     if(ORDER.length) loadForm(ORDER[0]);
   }
   try{
-    await loadRemote();
+    await loadRemote();  // pets.json 로드
+
+    // ★ 신규: R8 DB 로드
+    try{
+      const r8_obj = await fetchJSON(REMOTE_R8);
+      R8_DB = (r8_obj && !r8_obj.__404__) ? r8_obj : {};
+      console.log("R8_DB loaded:", Object.keys(R8_DB).length);
+    }catch(e){
+      console.warn("R8 원격 로드 실패, 빈 객체로 동작", e);
+      R8_DB = {};
+    }
+
+    renderR8List();   // DB + R8_DB까지 준비된 상태로 렌더
+
   }catch(e){
     console.warn("원격 로드 실패, 로컬 캐시로 동작", e);
-    if(!local){ DB={}; renderList(); renderR8List(); }
+    if(!local){
+      DB={}; renderList(); renderR8List();
+    }
   }
 })();
+
 </script>
 </body>
 </html>
