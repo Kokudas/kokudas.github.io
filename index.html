@@ -88,7 +88,11 @@
 .ringwrap{ position:relative; width:var(--ring-size); height:var(--ring-size); flex:0 0 var(--ring-size); }
 svg{ display:block; width:100%; height:100%; }
 .track{ stroke: var(--ring); fill:none; stroke-linecap: round; }
-.fill { stroke: var(--accent); fill:none; stroke-linecap: round; transition: stroke .25s ease, stroke-dashoffset .25s linear; }
+.fill {
+  stroke: var(--accent);
+  fill:none;
+  stroke-linecap: round;
+}
 
 /* 성공 링 HUD */
 .hud {
@@ -811,33 +815,86 @@ function makeRing(fillEl, maskStrokeEl, colorGetter){
   const r = resolveR(fillEl);
   const C = 2 * Math.PI * r;
   const baseStroke = fillEl.style.stroke || fillEl.getAttribute('stroke') || '#fff';
-  const strokeOn  = (col)=>{ fillEl.style.stroke = col || (colorGetter? colorGetter(): baseStroke); };
-  const strokeOff = ()=>{ fillEl.style.stroke = 'none'; };
+
   const clamp01 = (x)=> (Number.isFinite(x)? Math.max(0, Math.min(1,x)) : 0);
 
-  function setFrac(frac){
+  let currentF = 0;   // 현재 진행 비율(0~1)
+  let animId   = null;
+
+  // 실제로 path 상태를 반영하는 함수 (애니메이션 X)
+  function apply(frac){
     const f = clamp01(frac);
+
     if (f === 0){
+      // 완전히 비운 상태
       fillEl.setAttribute('stroke-dasharray','0 1');
       fillEl.setAttribute('stroke-dashoffset','0');
-      if(maskStrokeEl){
+      if (maskStrokeEl){
         maskStrokeEl.setAttribute('stroke-dasharray','0 1');
         maskStrokeEl.setAttribute('stroke-dashoffset','0');
       }
-      strokeOff();
+      fillEl.style.stroke = 'none';
       return;
     }
-    const dash=C, gap=C, off=(1-f)*C;
+
+    const dash = C;
+    const gap  = C;
+    const off  = (1 - f) * C;
+
     fillEl.setAttribute('stroke-dasharray', `${dash} ${gap}`);
     fillEl.setAttribute('stroke-dashoffset', `${off}`);
-    if(maskStrokeEl){
+
+    if (maskStrokeEl){
       maskStrokeEl.setAttribute('stroke-dasharray', `${dash} ${gap}`);
       maskStrokeEl.setAttribute('stroke-dashoffset', `${off}`);
     }
-    strokeOn();
+
+    const col = colorGetter ? (colorGetter() || baseStroke) : baseStroke;
+    fillEl.style.stroke = col;
   }
+
+  // 공개용: 애니메이션 포함 setFrac
+  function setFrac(targetFrac){
+    const target = clamp01(targetFrac);
+
+    // 같은 값이라면 애니메이션 없이 바로 반영
+    if (target === currentF){
+      apply(target);
+      return;
+    }
+
+    if (animId) cancelAnimationFrame(animId);
+
+    const start    = currentF;
+    const startT   = performance.now();
+    const duration = 350; // ms
+
+    function step(now){
+      const t = Math.min(1, (now - startT) / duration);
+      // 살짝 부드러운 ease-out
+      const eased = 1 - Math.pow(1 - t, 3);
+      const v = start + (target - start) * eased;
+
+      apply(v);
+
+      if (t < 1){
+        animId = requestAnimationFrame(step);
+      } else {
+        currentF = target;
+        animId = null;
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  // 초기 상태: 0% (빈 링)
+  apply(0);
+  currentF = 0;
+
   return { setFrac, C };
 }
+
 function polar0(cx,cy,r,deg){ const t=deg*Math.PI/180; return [cx + r*Math.cos(t), cy + r*Math.sin(t)]; }
 function arcPath0(cx,cy,r,deg0,deg1){
   let s=deg0, e=deg1; while(e<s) e+=360;
@@ -930,8 +987,20 @@ function colorByTries(x){
 }
 const { setFrac: _trSetFrac } = makeRing(trFill, null, ()=> colorByTries(currTries));
 let currTries = 1;
+
 function setTries(t){
-  currTries = Math.max(1, Number(t)||1);
+  const num = Number(t);
+
+  // ★ 0 또는 NaN → 완전히 비운 상태
+  if (!Number.isFinite(num) || num <= 0){
+    currTries = 0;
+    _trSetFrac(0);                 // makeRing 쪽에서 stroke none 처리
+    trFill.style.stroke = 'none';
+    document.getElementById('kpiTries').textContent = '—';
+    return;
+  }
+
+  currTries = Math.max(1, num);
   let frac;
   if(currTries>=200) frac=1;
   else{
@@ -940,9 +1009,10 @@ function setTries(t){
   }
   trFill.style.stroke = colorByTries(currTries);
   _trSetFrac(frac);
-  document.getElementById('kpiTries').textContent = (Number.isFinite(t)? Math.round(currTries) : '—');
+  document.getElementById('kpiTries').textContent = Math.round(currTries);
 }
 window.setTries = setTries;
+
 /* ===== KPI 렌더 교체 ===== */
 function showKpis(res){
   if(!res){
@@ -950,10 +1020,12 @@ function showKpis(res){
     kpiSuccess.textContent = "—%";
     kpiAppear .textContent = "—%";
     kpiTries  .textContent = "—";
-    // 링 리셋(크기·비율 유지)
+
+    // 링 리셋
     setSuccess(0);
     setAppear(0);
-    setTries(1);
+    setTries(0);   // ★ 여기 1 → 0 으로 변경
+
     // 부가정보 리셋
     totMatches.textContent = "—";
     rank8Matches.textContent = "—";
@@ -995,6 +1067,7 @@ function showKpis(res){
   html += `</tbody></table>`;
   distBox.innerHTML = html;
 }
+showKpis(null);
 
 /* ========= 관측치 편의 ========= */
 function enableWheelStep(el){
