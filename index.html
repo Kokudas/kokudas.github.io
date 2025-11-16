@@ -856,28 +856,6 @@ const core= document.getElementById('succCore');
 const flare= document.getElementById('succFlare');
 const SUCCR = resolveR(succFill);
 let head=0, run=false, lastTs=0;
-// ★ HUD 꼬리/코어 모양은 한 번만 그려두고, 그룹만 회전시키는 방식
-(function initHUDArcs(){
-  const TAIL_SPAN = 360 * 0.22;  // 기존과 동일
-  const CORE_SPAN = 360 * 0.10;
-
-  // 기준은 0도(3시 방향)를 head라고 보고,
-  // 꼬리는 head 기준으로 뒤로 늘어뜨린 형태로 고정
-  const tailStart = -TAIL_SPAN;
-  const tailEnd   = 0;
-  const coreStart = -CORE_SPAN;
-  const coreEnd   = 0;
-
-  // 한 번만 path를 그려둔다
-  tail.setAttribute('d', arcPath0(50, 50, SUCCR, tailStart, tailEnd));
-  core.setAttribute('d', arcPath0(50, 50, SUCCR, coreStart, coreEnd));
-
-  // flare 위치(코어 끝점 기준)도 한 번만 잡아둔다
-  const [fx, fy] = polar0(50, 50, SUCCR, coreEnd);
-  flare.setAttribute('cx', fx.toFixed(2));
-  flare.setAttribute('cy', fy.toFixed(2));
-})();
-
   
 function tick(ts){
   if (!run) return;
@@ -889,11 +867,20 @@ function tick(ts){
   const pxPerSec = parseFloat(getCSS('--hud-speed')) || 120;
   const degPerSec= (pxPerSec / circum) * 360;
 
+  // head: 현재 “꼬리 끝” 각도(도 단위)
   head = (head + degPerSec * dt) % 360;
 
-  // ★ 꼬리/코어 path는 건드리지 않고,
-  //    HUD 전체 그룹만 회전시킨다.
-  hud.setAttribute('transform', `rotate(${head} 50 50)`);
+  const TAIL_SPAN = 360 * 0.22;  // 꼬리 길이
+  const CORE_SPAN = 360 * 0.10;  // 안쪽 코어 길이
+
+  // ★ 여기서 매 프레임마다 path를 다시 그려준다
+  tail.setAttribute('d', arcPath0(50, 50, SUCCR, head - TAIL_SPAN, head));
+  core.setAttribute('d', arcPath0(50, 50, SUCCR, head - CORE_SPAN, head));
+
+  // 꼬리 끝에 붙는 작은 불꽃
+  const [fx, fy] = polar0(50, 50, SUCCR, head);
+  flare.setAttribute('cx', fx.toFixed(2));
+  flare.setAttribute('cy', fy.toFixed(2));
 
   requestAnimationFrame(tick);
 }
@@ -902,13 +889,15 @@ function setSuccess(pct){
   const f = Math.max(0, Math.min(100, Number(pct)||0))/100;
   _succSetFrac(f);
   document.getElementById('kpiSuccess').textContent = (f*100).toFixed(4) + '%';
+
   if (f <= 0){
     hud.style.opacity = 0;
     run   = false;
     lastTs= 0;
     head  = 0;
-    // ★ d는 그대로 두고, 회전만 초기화
-    hud.setAttribute('transform', 'rotate(0 50 50)');
+    // 필요하면 꼬리/코어 path를 비워도 됨
+    // tail.setAttribute('d','');
+    // core.setAttribute('d','');
   } else {
     hud.style.opacity = 1;
     if (!run){
