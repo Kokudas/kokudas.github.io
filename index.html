@@ -167,7 +167,7 @@ svg{ display:block; width:100%; height:100%; }
   .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)}
   .footer{max-width:1100px; margin:8px auto 30px; padding:0 16px; color:var(--muted); font-size:12px}
   .imgbox{width:100%; aspect-ratio: 16/9; border:1px dashed #334055; border-radius:12px; display:grid; place-items:center; background:#0d1117; overflow:hidden;}
-  .imgbox img{width:100%; height:100%; object-fit:cover; display:block}
+  .imgbox img{width:100%; height:100%; object-fit:contain;}
   .stepper{display:flex; gap:6px; margin-top:6px}
   
   /* 숫자 자릿수 고정 + 등폭 숫자 */
@@ -317,25 +317,28 @@ svg{ display:block; width:100%; height:100%; }
     </mask>
 
     <!-- ★ HUD 그라데이션(겉쪽) -->
-    <linearGradient id="hudGradOuter"
-                    x1="0" y1="50" x2="100" y2="50"
-                    gradientUnits="userSpaceOnUse">
-      <!-- 시작 색 -->
-      <stop offset="0%" stop-color="#6aa0ff"/>
-      <!-- 중간 블렌딩 -->
-      <stop offset="50%" stop-color="#cfe3ff"/>
-      <!-- 끝 색 -->
-      <stop offset="100%" stop-color="#ff8ecf"/>
-    </linearGradient>
+  <!-- ★ HUD 그라데이션(겉쪽: 밝은 하늘색 → 밝은 흰색) -->
+  <linearGradient id="hudGradOuter"
+                  x1="0" y1="50" x2="100" y2="50"
+                  gradientUnits="userSpaceOnUse">
+    <!-- 시작: 아주 옅은 하늘색 -->
+    <stop offset="0%"   stop-color="#8fd4ff" stop-opacity="0.2"/>
+    <!-- 중간: 더 밝은 하늘색 -->
+    <stop offset="40%"  stop-color="#cfe9ff" stop-opacity="0.8"/>
+    <!-- 끝: 거의 순수 흰색 -->
+    <stop offset="100%" stop-color="#ffffff" stop-opacity="1"/>
+  </linearGradient>
 
-    <!-- ★ HUD 그라데이션(안쪽, 반대로) -->
-    <linearGradient id="hudGradInner"
-                    x1="100" y1="50" x2="0" y2="50"
-                    gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#6aa0ff"/>
-      <stop offset="50%" stop-color="#cfe3ff"/>
-      <stop offset="100%" stop-color="#ff8ecf"/>
-    </linearGradient>
+  <!-- ★ HUD 그라데이션(안쪽: 전체적으로 더 하얀 느낌) -->
+  <linearGradient id="hudGradInner"
+                  x1="0" y1="50" x2="100" y2="50"
+                  gradientUnits="userSpaceOnUse">
+    <!-- 시작: 하늘색 + 흰색 섞인 톤 -->
+    <stop offset="0%"   stop-color="#d9f3ff" stop-opacity="0.6"/>
+    <!-- 끝: 완전 흰색 -->
+    <stop offset="100%" stop-color="#ffffff" stop-opacity="1"/>
+  </linearGradient>
+
           </defs>
 
           <use href="#succPath" class="track" stroke-width="10" transform="rotate(-90 50 50)"/>
