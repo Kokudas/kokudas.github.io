@@ -8552,5 +8552,343 @@
     "route": "지원/마일리지 포인트 상점",
     "mount": false,
     "img": "https://stoneage001.com/data/file/board23/1edfce9ea2ad6b672e8453ca35a782f3_P0Bv7VXS_4b6625b6a08a5e748651c73595c105266d40cb3c.gif"
-  }
+  },
+    {
+    "name": "노르푸스",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 2,
+      "수": 0,
+      "화": 0,
+      "풍": 8
+    },
+    "s0": {
+      "hp": 53.16,
+      "atk": 11.8,
+      "def": 6.4,
+      "agi": 8.52
+    },
+    "sg": {
+      "hp": 10.08,
+      "atk": 2.24,
+      "def": 1.21,
+      "agi": 1.62
+    },
+    "route": "정규 듀얼 보상",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_uQBwZWgj_40697d4799f79799f57281ccca1e6e45ef4d71bd.gif"
+  },
+      {
+    "name": "카무르",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 0,
+      "화": 8,
+      "풍": 2
+    },
+    "s0": {
+      "hp": 53.38,
+      "atk": 12.73,
+      "def": 7.33,
+      "agi": 6.63
+    },
+    "sg": {
+      "hp": 10.14,
+      "atk": 2.42,
+      "def": 1.39,
+      "agi": 1.26
+    },
+    "route": "정규 듀얼 보상",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_UoVczZr7_6c4b6dce8b5d8afbd05dc8e79aa609df649ec9dc.gif"
+  },
+      {
+    "name": "다이피노",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 6,
+      "수": 0,
+      "화": 0,
+      "풍": 4
+    },
+    "s0": {
+      "hp": 57.59,
+      "atk": 13.07,
+      "def": 7.69,
+      "agi": 8.19
+    },
+    "sg": {
+      "hp": 10.08,
+      "atk": 2.29,
+      "def": 1.35,
+      "agi": 1.43
+    },
+    "route": "정규 듀얼 보상",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_SdkDiyGU_b088174bdbd96ef07396b928ca38b61e2a0521e1.gif"
+  },
+      {
+    "name": "봉봉",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 0,
+      "화": 3,
+      "풍": 7
+    },
+    "s0": {
+      "hp": 53.43,
+      "atk": 12.17,
+      "def": 7.49,
+      "agi": 6.89
+    },
+    "sg": {
+      "hp": 10.17,
+      "atk": 2.32,
+      "def": 1.43,
+      "agi": 1.31
+    },
+    "route": "정규 듀얼 보상",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_COtEFcZy_764ebdd4c797e2a87389d0106754fa737ebc84b5.gif"
+  },
+      {
+    "name": "엘르벨",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 5,
+      "수": 0,
+      "화": 0,
+      "풍": 5
+    },
+    "s0": {
+      "hp": 58.37,
+      "atk": 12.32,
+      "def": 7.17,
+      "agi": 9.23
+    },
+    "sg": {
+      "hp": 10.21,
+      "atk": 2.16,
+      "def": 1.25,
+      "agi": 1.62
+    },
+    "route": "전쟁의 전리품 랜덤 보상",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_oONDdmea_6e802987872253798dad9dc06ad3e2d270bea857.gif"
+  },
+      {
+    "name": "가르마루",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 2,
+      "수": 0,
+      "화": 0,
+      "풍": 8
+    },
+    "s0": {
+      "hp": 55.48,
+      "atk": 12.36,
+      "def": 7.26,
+      "agi": 7.96
+    },
+    "sg": {
+      "hp": 10.17,
+      "atk": 2.27,
+      "def": 1.33,
+      "agi": 1.46
+    },
+    "route": "전쟁의 전리품 랜덤 보상",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_Jdr83B0t_6cf3cb6ceacfa9733d8e4dcd1911e3134d78a7a9.gif"
+  },
+      {
+    "name": "헤르마루",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 0,
+      "화": 8,
+      "풍": 2
+    },
+    "s0": {
+      "hp": 55.48,
+      "atk": 12.62,
+      "def": 7.27,
+      "agi": 7.7
+    },
+    "sg": {
+      "hp": 10.17,
+      "atk": 2.31,
+      "def": 1.33,
+      "agi": 1.41
+    },
+    "route": "전쟁의 전리품 랜덤 보상",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_AWvymfL2_ee022d48b53478e5903d7b3c2c97936ea28e85e1.gif"
+  },
+      {
+    "name": "베르마루",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 8,
+      "수": 0,
+      "화": 0,
+      "풍": 2
+    },
+    "s0": {
+      "hp": 50.57,
+      "atk": 11.04,
+      "def": 6.36,
+      "agi": 8.19
+    },
+    "sg": {
+      "hp": 10.02,
+      "atk": 2.19,
+      "def": 1.26,
+      "agi": 1.62
+    },
+    "route": "전쟁의 전리품 랜덤 보상",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_Ri1ZFghI_ce2789c864d36e31443a70b61755c1aa1793f7ca.gif"
+  },
+      {
+    "name": "화이트골로스",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 5,
+      "화": 5,
+      "풍": 0
+    },
+    "s0": {
+      "hp": 60.38,
+      "atk": 13.72,
+      "def": 8.54,
+      "agi": 6.88
+    },
+    "sg": {
+      "hp": 10.51,
+      "atk": 2.39,
+      "def": 1.49,
+      "agi": 1.2
+    },
+    "route": "전쟁의 전리품 랜덤 보상",
+    "mount": true,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_VWf3A182_1e678c7f39a3887fe86498c861e7587313d08b8f.gif"
+  },
+      {
+    "name": "현무",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 9,
+      "수": 1,
+      "화": 0,
+      "풍": 0
+    },
+    "s0": {
+      "hp": 71.63,
+      "atk": 11.82,
+      "def": 13.17,
+      "agi": 2.88
+    },
+    "sg": {
+      "hp": 12.46,
+      "atk": 2.06,
+      "def": 2.29,
+      "agi": 0.5
+    },
+    "route": "격전의 알 랜덤 보상",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_0fJgMXQV_c48303cfcf49ea2456391596238aa848faac999a.gif"
+  },
+      {
+    "name": "청룡",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 9,
+      "화": 1,
+      "풍": 0
+    },
+    "s0": {
+      "hp": 62.38,
+      "atk": 13.49,
+      "def": 7.87,
+      "agi": 7.88
+    },
+    "sg": {
+      "hp": 10.85,
+      "atk": 2.35,
+      "def": 1.37,
+      "agi": 1.37
+    },
+    "route": "격전의 알 랜덤 보상",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_ed3ub5Kr_491bdfe6d8cdb1347724162de320d443bd6ecfb2.gif"
+  },
+      {
+    "name": "주작",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 0,
+      "수": 0,
+      "화": 9,
+      "풍": 1
+    },
+    "s0": {
+      "hp": 58.63,
+      "atk": 13.12,
+      "def": 6.82,
+      "agi": 9.38
+    },
+    "sg": {
+      "hp": 10.2,
+      "atk": 2.28,
+      "def": 1.19,
+      "agi": 1.63
+    },
+    "route": "격전의 알 랜덤 보상",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_kNpbJcGM_1bf07d5d5a84f2249eea914f8c732255b793c3c8.gif"
+  },
+      {
+    "name": "풍백",
+    "searchable": true,
+    "grade": "일반",
+    "attr": {
+      "지": 1,
+      "수": 0,
+      "화": 0,
+      "풍": 9
+    },
+    "s0": {
+      "hp": 53.38,
+      "atk": 11.51,
+      "def": 6.56,
+      "agi": 8.63
+    },
+    "sg": {
+      "hp": 10.14,
+      "atk": 2.19,
+      "def": 1.25,
+      "agi": 1.64
+    },
+    "route": "격전의 알 랜덤 보상",
+    "mount": false,
+    "img": "https://stoneage001.com/data/file/board23/79e672bac5e812940ceb857c119d9530_8CUw2ucl_dc67fa0cdb41d3b81fd61877e9dce1f2d9d818f1.gif"
+    }
 ]
